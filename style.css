@@ -2,7 +2,7 @@
   width: 100%;
   min-height: 100vh;
   background: linear-gradient(
-    -60deg,
+    -80deg,
     #e9d8af 0%,
     #e9d8af 50%,
     #86251c 50%,
@@ -26,8 +26,8 @@
   .SideBoxes{
     display: grid;
     grid-row: row1;
-    grid-template-rows: [row0] 10% [row1] 60% [row2] 20%;
-    grid-template-columns: [column0] 50% [column1] 210px;
+    grid-template-rows: [row0] 1% [row1] 60% [row2] 20%;
+    grid-template-columns: [column0] 50% [column1] 50%;
     align-items:center;
   }
   .ButtonBoxes{
@@ -51,7 +51,7 @@
   }
   .MajorFailureB{
     width:25vw;
-    height: 5vh;
+    height: 100%;
     margin-top: 0vh;
     background: linear-gradient(
     -45deg,
