@@ -20,6 +20,8 @@
     grid-column-end: span 2;
     background-color:#bab9b9 ;
     display: grid;
+    grid-template-rows: [row0] 5vh [row1] 5vh;
+    grid-template-columns: [c1]25%[c2]25%[c3]25%[c4]25%;
     justify-content: right;
     align-items:center;
   }
@@ -35,6 +37,28 @@
     width: 25vh;
     grid-template-rows:[row0] 1vh [row1] 13vh [row2] 13vh [row3] 13vh [row4] ;
     align-items:flex-start;
+  }
+  input[type="checkbox"] {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    appearance: none;
+    /* For iOS < 15 to remove gradient background */
+    background-color: #86251c;
+    /* Not removed via appearance */
+    margin: 0;
+    float: left;
+    border: none;
+    border-radius: 10%;
+    color: #ceab4a;
+    display: inline-block;
+    text-align: center;
+    font-size: 5vh;
+    width: 12.5vw;
+    height: 10vw;
+    background-color: #86251c;
+  }
+  input[type="checkbox"]:checked {
+    background-color: #b98578;
   }
   .InputButtonR{
     border: none;

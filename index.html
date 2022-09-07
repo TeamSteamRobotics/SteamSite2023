@@ -8,10 +8,8 @@
     <title>Document</title>
   </head>
   <body class="bodya">
-      <div class="OperationsBox">
-      <button class="MajorFailureB"></button>
-    </div>
     <div class="SideBoxes">
+      <t style="color: #ceab4a;font-size: 5vh; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">auto</t>
       <div class="ButtonBoxes" style="justify-items: right; align-self: center; justify-self: left;margin-right: auto;margin-top: auto;margin-bottom: auto;">
         <img src="Liamthinggold.png"  style="height: 40vh; grid-row: row0;align-self: flex-start;justify-self: left;margin-left: auto;"><img>
         <button class="InputButtonY" style="grid-row: row1;">0</button>
@@ -19,13 +17,25 @@
       </div>
     </div>
     <div class="SideBoxes">
+      <t style="color: #86251c;font-size: 5vh; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">teleop</t>
       <div class="ButtonBoxes" style="justify-items: left;margin-left: auto; align-self: flex-start; margin-top: 10vh;" >
         <img src="Liamthingred.png"  style="height: 40vh; grid-row: row0;align-self: flex-start;justify-self: right;"><img>
         <button class="InputButtonR" style="grid-row: row1;">0</button>
         <button class="InputButtonR">0</button>
       </div>
-      <img src="bars red.png"  style="height: 40vh; align-self: flex-end;justify-self: center;margin-right: auto;margin-left: auto;"><img>
+      <div class="ButtonBoxes" style="width: 100%;align-items: flex-end; align-self: flex-end;justify-self: left;margin-right: auto;margin-left: 0;grid-template-columns: [c1]25%[c2]25%[c3]25%[c4]25%;">
+        <img src="bars red(1).png"  style="width: 50vw;justify-self: left;margin-right: auto;margin-left: -1vw;align-self: flex-start;"><img>
+        <input type="checkbox" class="barsbutton" style="grid-row: row2;grid-column: auto;"></input>
+        <input type="checkbox" class="barsbutton" style="grid-row: row2;grid-column: auto;"></input>
+        <input type="checkbox" class="barsbutton" style="grid-row: row2;grid-column: auto;"></input>
+        <input type="checkbox" class="barsbutton" style="grid-row: row2;grid-column: auto;"></input>
+      </div>
+      
     </div>
+    <div class="OperationsBox">
+      <input type="text" name="teamnum" style="grid-row: row1;grid-column-start: c2; grid-column-end: c4; margin-left: 12.5vw; margin-right: 12.5vw;background-color: #86251c; color: #ceab4a;font-size: 4vh;align-self: flex-start;text-align: center;border-color: #ceab4a;" placeholder="TEAM"></input>
+    <button class="MajorFailureB"></button>
+  </div>
     <script src="script.js"></script>
   </body>
  
