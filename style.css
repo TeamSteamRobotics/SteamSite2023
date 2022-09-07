@@ -3,15 +3,15 @@
   min-height: 100vh;
   background: linear-gradient(
     -80deg,
-    #e9d8af 0%,
-    #e9d8af 50%,
+    #ceab4a 0%,
+    #ceab4a 50%,
     #86251c 50%,
     #86251c 100%
   );
   display: grid;
   margin: 0%;
   grid-template-columns: [column0] 50% [column1] 50%;
-  grid-template-rows: [row0] 5% [row1] 95%;
+  grid-template-rows: [row0] 5vh [row1] 95%;
   }
   .OperationsBox{
     width: 100%;
@@ -24,17 +24,14 @@
     align-items:center;
   }
   .SideBoxes{
-    display: grid;
+    display: flex;
     grid-row: row1;
-    grid-template-rows: [row0] 1% [row1] 60% [row2] 20%;
-    grid-template-columns: [column0] 50% [column1] 50%;
     align-items:center;
   }
   .ButtonBoxes{
     display: grid;
-    grid-row: row1;
-    grid-template-rows: 10vh[row0] 10vh [row1] 10vh [row2] 10vh [row3] 20vh;
-    grid-template-columns: [column0] 50% [column1] 50%;
+    width: 25vh;
+    grid-template-rows:[row0] 1vh [row1] 13vh [row2] 13vh [row3] 13vh [row4] ;
     align-items:flex-start;
   }
   .InputButtonR{
@@ -42,11 +39,22 @@
     color: #ceab4a;
     display: inline-block;
     text-align: center;
-    width: 5vh;
-    height: 5vh;
+    width: 10vh;
+    height: 10vh;
     background-color: #86251c;
   }
+  .InputButtonY:active{
+    background-color: #e9d8af;
+  }
   .InputButtonY{
+    border: none;
+    border-radius: 25%;
+    color: #86251c;
+    display: inline-block;
+    text-align: center;
+    font-size: 5vh;
+    width: 10vh;
+    height: 10vh;
     background-color: #ceab4a;
   }
   .MajorFailureB{
