@@ -8,6 +8,11 @@ let c2 = document.getElementById("c2");
 let c3 = document.getElementById("c3");
 let c4 = document.getElementById("c4");
 
+let bs = document.getElementById("bs");
+let pb = document.getElementById("pb");
+
+let vals = {5119:{0:{0:0}}};
+
 let bVals = [0, 0, 0, 0]
 let checkedBoxes = 0;
 
@@ -41,7 +46,6 @@ function checkCBoxes(x) {
 b1.addEventListener("click", () => {
     bVals[0]++;
     b1.innerText = bVals[0]
-    window.location.href = "disp.html";
 })
 b2.addEventListener("click", () => {
     bVals[1]++;
@@ -54,4 +58,13 @@ b3.addEventListener("click", () => {
 b4.addEventListener("click", () => {
     bVals[3]++;
     b4.innerText = bVals[3]
+})
+bs.addEventListener("click",()=>{
+    window.location.href = "disp.html";
+})
+pb.addEventListener("click",()=>{
+    document.cookie = "val="+JSON.stringify(vals)
+    console.log(decodeURIComponent(document.cookie))
+    
+    
 })
