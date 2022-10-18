@@ -37,7 +37,7 @@
     grid-column-end: span 2;
     background-color:#bab9b9 ;
     display: grid;
-    grid-template-rows: [row0] 5vh [row1] 5vh;
+    grid-template-rows: [row0] 5vh [row1] 5vh [row3];
     grid-template-columns: [c1]25%[c2]25%[c3]25%[c4]25%;
     justify-content: right;
     align-items:center;
