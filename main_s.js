@@ -20,7 +20,7 @@ let vals = {};
 let bVals = [0, 0, 0, 0]
 let checkedBoxes = -1;
 
-let mfv = false
+let mfv = 0
 
 var qr = new QRious({
     element: document.getElementById('qr'),
@@ -90,16 +90,43 @@ bs.addEventListener("click", () => {
 pb.addEventListener("click", () => {
     let teamnum = parseInt(team.value)
     let roundnum = parseInt(round.value)
-    let nv = { 0: bVals[0], 1: bVals[1], 2: bVals[2], 3: bVals[3], 4: checkedBoxes, 5:mfv}
+    if(team.value.trim() != ""&&round.value.trim() !=""){
+        let nv = [ bVals[0], bVals[1], bVals[2], bVals[3], checkedBoxes, mfv]
     if (vals[teamnum] == undefined) {
         vals[teamnum] = {}
     }
     vals[teamnum][roundnum] = nv
-    console.log(vals)
-    qr.value = JSON.stringify(vals)
-
+    //console.log(vals)
+    let qrOut = ""
+    for(let i = 0;i<Object.keys(vals).length;i++){
+        let iVal = vals[Object.keys(vals)[i]]
+        qrOut+=Object.keys(vals)[i]+":"
+        console.log(iVal)
+        for(let j= 0;j<Object.keys(iVal).length;j++){
+            let jVal = iVal[Object.keys(iVal)[j]]
+            qrOut+=Object.keys(iVal)[j]+"."
+            console.log(jVal)
+            for(let l = 0;l<6;l++){
+               qrOut+=jVal[l]
+               if(l!=5){
+                qrOut+="."
+               }
+            }
+            if(j!=Object.keys(iVal).length-1){
+              qrOut+="."  
+            }
+        }
+        if(i!=Object.keys(vals).length-1){
+            qrOut+=";"
+        }
+    }
+    console.log(qrOut)
+    qr.value = qrOut
     bVals = [0, 0, 0, 0]
     checkedBoxes = -1;
+
+    team.value = ""
+    round.value = ""
 
     b1.innerText = bVals[0]
     b2.innerText = bVals[1]
@@ -109,11 +136,15 @@ pb.addEventListener("click", () => {
     c2.checked = false
     c3.checked = false
     c4.checked = false
-    mf = false
+    mf = 0
+    }else{
+        console.log("hit")
+        alert("add a team number and round number before pushing")
+    }
 })
 cl.addEventListener("click", () => {
     vals = {}
 })
 mf.addEventListener("click", () => {
-    mfv = true
+    mfv = 1
 })
