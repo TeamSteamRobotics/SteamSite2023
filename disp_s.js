@@ -2,10 +2,9 @@ function onScanSuccess(decodedText, decodedResult) {
   // Handle on success condition with the decoded text or result.
   console.log(`Scan result: ${decodedText}`);
   qrToJson(decodedText)
-  console.log(vals)
 }
 
-var html5QrcodeScanner = new Html5QrcodeScanner(
+var html5QrcodeScanner = new Html5QrcodeScanner(//scans qr
 "reader", { fps: 10, qrbox: 500 });
 html5QrcodeScanner.render(onScanSuccess);
 
@@ -28,27 +27,24 @@ function qrToJson(input){
 
 //qr code shit end
 
-let bs = document.getElementById("bs");
+let bs = document.getElementById("bs");//all page swapping code
 bs.addEventListener("click", () => {
   window.location.href = "main.html";
 })
 
-
-
 let vals = {}
-
 
 let team = document.getElementById("teamnum")
 let teamnum = 0
 
-team.addEventListener("input", () => {
+team.addEventListener("input", () => {//when you type in a team this runs
   teamnum = parseInt(team.value)
   if (vals[teamnum] != undefined) {//makes sure team is on vals
     updateVals() 
   }
 })
-function updateVals(){
-  for(let i = 0;i<13;i++){
+function updateVals(){//updates the garpghs
+  for(let i = 0;i<13;i++){//deletes all the stuff
     line.data.datasets.forEach((dataset) => {
       dataset.data.pop();
   });
@@ -56,7 +52,7 @@ function updateVals(){
     dataset.data.pop();
   });
   }
-  let nv = [0,0,0,0,0,0,0]
+  let nv = [0,0,0,0,0,0,0]//new values
   let totalRound =Object.keys(vals[teamnum]).length
   for(let j=0;j<Object.keys(vals[teamnum]).length;j++){
     let key = vals[teamnum][Object.keys(vals[teamnum])[j]]
@@ -68,8 +64,7 @@ function updateVals(){
     nv[0]+=parseInt(key[0])
     nv[6]+=parseInt(key[4])
     
-    line.data.datasets.forEach((dataset) => {
-      console.log(dataset)
+    line.data.datasets.forEach((dataset) => {//this adds the values to the line graph
       switch (dataset.label) {
         case "teleop":
           dataset.data.push(parseInt(key[2])+parseInt(key[3]))
@@ -86,17 +81,12 @@ function updateVals(){
     });
 
   }
-  for(let t = 0;t<nv.length;t++){
+  for(let t = 0;t<nv.length;t++){//divides the newvalues by total rounds
     nv[t] = nv[t]/totalRound
   }
-  console.log(nv)
 radial.data.datasets.forEach((dataset) => {
-  dataset.data = nv
+  dataset.data = nv //output in radial graph
 });
-
-
-
-
 
 line.update();
 radial.update();

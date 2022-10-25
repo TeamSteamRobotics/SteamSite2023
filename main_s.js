@@ -1,19 +1,19 @@
-let b1 = document.getElementById("b1");
+let b1 = document.getElementById("b1");//buttons
 let b2 = document.getElementById("b2");
 let b3 = document.getElementById("b3");
 let b4 = document.getElementById("b4");
 
-let c1 = document.getElementById("c1");
+let c1 = document.getElementById("c1");//check boxes
 let c2 = document.getElementById("c2");
 let c3 = document.getElementById("c3");
 let c4 = document.getElementById("c4");
 
 let round = document.getElementById("round")
 let team = document.getElementById("teamnum")
-let bs = document.getElementById("bs");
-let pb = document.getElementById("pb");
-let cl = document.getElementById("clear");
-let mf = document.getElementById("mf");
+let bs = document.getElementById("bs");//swap button
+let pb = document.getElementById("pb");//push button
+let cl = document.getElementById("clear");//clear
+let mf = document.getElementById("mf");//major failure button
 
 let vals = {};
 
@@ -26,8 +26,8 @@ var qr = new QRious({
     element: document.getElementById('qr'),
 });
 qr.level = 'L';
-qr.size = document.body.clientWidth-20;
-function checkCBoxes(x) {
+qr.size = document.body.clientWidth-20;//all the qr code bs
+function checkCBoxes(x) {//check box unchecking code
     switch (x) {
         case 0:
             c2.checked = 0;
@@ -53,7 +53,7 @@ function checkCBoxes(x) {
     }
 
 }
-
+//all of these just add to clickers
 b1.addEventListener("click", () => {
     bVals[0]++;
     b1.innerText = bVals[0]
@@ -87,26 +87,25 @@ c4.addEventListener("click", () => {
 bs.addEventListener("click", () => {
     window.location.href = "disp.html";
 })
+
 pb.addEventListener("click", () => {
     let teamnum = parseInt(team.value)
-    let roundnum = parseInt(round.value)
-    if(team.value.trim() != ""&&round.value.trim() !=""){
+    let roundnum = parseInt(round.value)//gets round and team vals
+    if(team.value.trim() != ""&&round.value.trim() !=""){//checks to see if they both are filled out
         let nv = [ bVals[0], bVals[1], bVals[2], bVals[3], checkedBoxes, mfv]
     if (vals[teamnum] == undefined) {
         vals[teamnum] = {}
     }
-    vals[teamnum][roundnum] = nv
+    vals[teamnum][roundnum] = nv// makes the spot equal to the vals
     //console.log(vals)
     let qrOut = ""
-    for(let i = 0;i<Object.keys(vals).length;i++){
+    for(let i = 0;i<Object.keys(vals).length;i++){//finds all the teams
         let iVal = vals[Object.keys(vals)[i]]
-        qrOut+=Object.keys(vals)[i]+":"
-        console.log(iVal)
-        for(let j= 0;j<Object.keys(iVal).length;j++){
+        qrOut+=Object.keys(vals)[i]+":"//adds them to a certain spot
+        for(let j= 0;j<Object.keys(iVal).length;j++){//finds all the rounds
             let jVal = iVal[Object.keys(iVal)[j]]
-            qrOut+=Object.keys(iVal)[j]+"."
-            console.log(jVal)
-            for(let l = 0;l<6;l++){
+            qrOut+=Object.keys(iVal)[j]+"."//adds them to the list
+            for(let l = 0;l<6;l++){//adds all the vals
                qrOut+=jVal[l]
                if(l!=5){
                 qrOut+="."
@@ -120,11 +119,11 @@ pb.addEventListener("click", () => {
             qrOut+=";"
         }
     }
-    console.log(qrOut)
     qr.value = qrOut
     bVals = [0, 0, 0, 0]
     checkedBoxes = -1;
 
+    //clears every value
     team.value = ""
     round.value = ""
 
@@ -138,7 +137,6 @@ pb.addEventListener("click", () => {
     c4.checked = false
     mf = 0
     }else{
-        console.log("hit")
         alert("add a team number and round number before pushing")
     }
 })
