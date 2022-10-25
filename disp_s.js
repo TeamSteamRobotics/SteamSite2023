@@ -28,6 +28,13 @@ function qrToJson(input){
 
 //qr code shit end
 
+let bs = document.getElementById("bs");
+bs.addEventListener("click", () => {
+  window.location.href = "main.html";
+})
+
+
+
 let vals = {}
 
 
@@ -50,18 +57,37 @@ function updateVals(){
   });
   }
   let nv = [0,0,0,0,0,0,0]
-  let j = 0
-  for(j=0;j<Object.keys(vals[teamnum]).length;j++){
-    console.log(j)
+  let totalRound =Object.keys(vals[teamnum]).length
+  for(let j=0;j<Object.keys(vals[teamnum]).length;j++){
     let key = vals[teamnum][Object.keys(vals[teamnum])[j]]
-    console.log(key)
-    nv[5]+= parseInt(key[0])+parseInt(key[1])
-    nv[4]+=parseInt(key[2])+parseInt(key[3])
+    nv[5]+= parseInt(key[2])+parseInt(key[3])
+    nv[4]+=parseInt(key[0])+parseInt(key[1])
     nv[3]+=parseInt(key[3])
     nv[2]+=parseInt(key[2])
     nv[1]+=parseInt(key[1])
     nv[0]+=parseInt(key[0])
     nv[6]+=parseInt(key[4])
+    
+    line.data.datasets.forEach((dataset) => {
+      console.log(dataset)
+      switch (dataset.label) {
+        case "teleop":
+          dataset.data.push(parseInt(key[2])+parseInt(key[3]))
+          break;
+        case "auto":
+            dataset.data.push(parseInt(key[0])+parseInt(key[1]))
+            break;
+        case "climb":
+          dataset.data.push(parseInt(key[4]))
+          break;
+        default:
+          break;
+      }
+    });
+
+  }
+  for(let t = 0;t<nv.length;t++){
+    nv[t] = nv[t]/totalRound
   }
   console.log(nv)
 radial.data.datasets.forEach((dataset) => {
@@ -122,16 +148,16 @@ const labels = [
   const linedata = {
     labels: [1,2,3,4,5,6,7,8,9,10,11,12,13],
     datasets: [{
-      label: "a",
+      label: "teleop",
       data: [1, 2, 3, 4, 5, 6],
       borderColor: "rgb(255, 0, 0)",
     },{
   
-    label: "b",
+    label: "auto",
     data: [4, 2, 3, 4, 5, 6],
     borderColor: "rgb(0, 255, 0)",
   },{
-  label: 'c',
+  label: 'climb',
   data: [1, 2, 3, 8, 5, 6],
   borderColor: "rgb(0, 0, 255)",
 }],

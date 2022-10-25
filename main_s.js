@@ -26,7 +26,7 @@ var qr = new QRious({
     element: document.getElementById('qr'),
 });
 qr.level = 'L';
-qr.size = document.body.clientWidth - 20;
+qr.size = document.body.clientWidth-20;
 function checkCBoxes(x) {
     switch (x) {
         case 0:
