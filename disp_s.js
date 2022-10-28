@@ -1,14 +1,27 @@
 let vals = {}
+let del = 0;
+let cbox = document.getElementById("cbox");
 function onScanSuccess(decodedText, decodedResult) {
   // Handle on success condition with the decoded text or result.
   console.log(`Scan result: ${decodedText}`);
   qrToJson(decodedText)
+  scandler(10)
 }
-
+function onScanFailure(decodedText, decodedResult){
+  scandler(0)
+}
 var html5QrcodeScanner = new Html5QrcodeScanner(//scans qr
   "reader", { fps: 10, qrbox: 500 });
-html5QrcodeScanner.render(onScanSuccess);
-
+html5QrcodeScanner.render(onScanSuccess,onScanFailure);
+function scandler(x){
+  del += x
+  if(del>0){
+    del--
+    cbox.style.backgroundColor = "#00FF00"
+  }else{
+    cbox.style.backgroundColor = "red"
+  }
+}
 function qrToJson(input) {
   let tempa = input.split(";")//splits out diferent teams
   for (let i = 0; i < tempa.length; i++) {

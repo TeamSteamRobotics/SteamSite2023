@@ -18,7 +18,7 @@ let mf = document.getElementById("mf");//major failure button
 let vals = {};
 
 let bVals = [0, 0, 0, 0]
-let checkedBoxes = -1;
+let checkedBoxes = 0;
 
 let mfv = 0
 
@@ -72,16 +72,16 @@ b4.addEventListener("click", () => {
 })
 
 c1.addEventListener("click", () => {
-    checkedBoxes = 3
+    checkedBoxes = 4
 })
 c2.addEventListener("click", () => {
-    checkedBoxes = 2
+    checkedBoxes = 3
 })
 c3.addEventListener("click", () => {
-    checkedBoxes = 1
+    checkedBoxes = 2
 })
 c4.addEventListener("click", () => {
-    checkedBoxes = 0
+    checkedBoxes = 1
 })
 
 bs.addEventListener("click", () => {
@@ -97,7 +97,7 @@ pb.addEventListener("click", () => {
         vals[teamnum] = {}
     }
     vals[teamnum][roundnum] = nv// makes the spot equal to the vals
-    //console.log(vals)
+    console.log(vals)
     let qrOut = ""
     for(let i = 0;i<Object.keys(vals).length;i++){//finds all the teams
         let iVal = vals[Object.keys(vals)[i]]
@@ -119,6 +119,7 @@ pb.addEventListener("click", () => {
             qrOut+=";"
         }
     }
+    console.log(qrOut)
     qr.value = qrOut
     bVals = [0, 0, 0, 0]
     checkedBoxes = -1;
