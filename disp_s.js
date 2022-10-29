@@ -11,7 +11,7 @@ function onScanFailure(decodedText, decodedResult){
   scandler(0)
 }
 var html5QrcodeScanner = new Html5QrcodeScanner(//scans qr
-  "reader", { fps: 10, qrbox: 500 });
+  "reader", { fps: 10 });
 html5QrcodeScanner.render(onScanSuccess,onScanFailure);
 function scandler(x){
   del += x
@@ -193,6 +193,7 @@ const radialconfig = {
   type: 'radar',
   data: radialdata,
   options: {
+    responsive: false,
     scales: {
       r: {
         pointLabels: {
@@ -226,6 +227,7 @@ const lineconfig = {
   type: 'line',
   data: linedata,
   options: {
+    responsive: false,
     scales: {
       r: {
         suggestedMin: 0,
@@ -279,7 +281,7 @@ const allconfig = {
         text: 'Chart.js Bar Chart - Stacked'
       },
     },
-    responsive: true,
+    responsive: false,
     scales: {
       x: {
         stacked: true,
@@ -333,3 +335,4 @@ qr.value = qrOut
     }
     qr.value = qrOut
   }
+  

@@ -6,17 +6,59 @@
             <button class="swapB" id="bs">swap</button>
             <button class="swapB" id="clear">clear</button>
         </div>
-        <div style="grid-column-start: column0;grid-column-end: column2;">
-            <canvas id="radial"></canvas>
-            <canvas id="line"></canvas>
-            <div style="width: 100%; height: 80px;background-color: red;" id="cbox"></div>
-            <div style="width: 100%" id="reader"></div>
-            <canvas id="allteams"></canvas>
+        <div id="thediv" style="grid-column-start: column0;grid-column-end: column2;justify-content: left;">
+            <div id="radialdiv" style="width:100vw;height:100vw;flex-shrink: 0;">
+                <canvas id="radial" style="width:100%;"></canvas>
+            </div>
+            <div id="qrfr">
+                <div style="width: 100%; height: 30%;background-color: red;flex-shrink: 0;" id="cbox"></div>
+                <div style="width: 100%; height: 70%;" id="reader"></div>
+            </div>
+            
+            <div id="allteamsdiv"style="height:30%;width:100vw; overflow: hidden;flex-shrink: 0;">
+                <canvas id="allteams" style="width: 100%;"></canvas>
+            </div>
+            <div id="linediv"style="width:100%;flex-shrink: 0;">
+                <canvas id="line" style="width:100%"></canvas>
+            </div>
             <canvas id="qr"></canvas>
         </div>
         <script src="qrcodecode.js"></script>
         <script src="./html5-qrcode.min.js"></script>
         <script src="package/dist/chart.js"></script>
         <script src="disp_s.js"></script>
+        <script>
+            if(document.body.clientHeight<document.body.clientWidth){
+                let div = document.getElementById("thediv")
+                let radial = document.getElementById("radialdiv")
+                let line = document.getElementById("linediv")
+                let cycam = document.getElementById("qrfr")
+                let allteams = document.getElementById("allteamsdiv")
+                let qr = document.getElementById("qr")
+
+                div.style.display ="flex"
+                div.style.flexDirection = "row"
+                div.style.flexFlow = "wrap"
+
+                radial.style.marginLeft = "-10%"
+                radial.style.width = "50%"
+                radial.style.height = "40%"
+                
+                cycam.style.width = "30vw"
+                cycam.style.height = "40vh"
+                line.style.width = "50vw"
+                line.style.height = "45%"
+                allteams.style.width = "30%"
+                allteams.style.height = "40%"
+                qr.style.width = "50vh"
+                qr.style.height = "50vh"
+                qr.style.marginTop ="5%"
+                line.style.marginTop = "25%"
+                line.style.marginRight ="50%"
+
+            }else{
+
+            }
+        </script>
     </body>
 </html>

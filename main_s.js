@@ -71,6 +71,24 @@ b4.addEventListener("click", () => {
     b4.innerText = bVals[3]
 })
 
+
+b1.addEventListener("dblclick", () => {
+    bVals[0]--;
+    b1.innerText = bVals[0]
+})
+b2.addEventListener("dblclick", () => {
+    bVals[1]--;
+    b2.innerText = bVals[1]
+})
+b3.addEventListener("dblclick", () => {
+    bVals[2]--;
+    b3.innerText = bVals[2]
+})
+b4.addEventListener("dblclick", () => {
+    bVals[3]--;
+    b4.innerText = bVals[3]
+})
+
 c1.addEventListener("click", () => {
     checkedBoxes = 4
 })
@@ -122,7 +140,7 @@ pb.addEventListener("click", () => {
     console.log(qrOut)
     qr.value = qrOut
     bVals = [0, 0, 0, 0]
-    checkedBoxes = -1;
+    checkedBoxes = 0
 
     //clears every value
     team.value = ""
