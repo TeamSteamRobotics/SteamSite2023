@@ -21,12 +21,18 @@ let bVals = [0, 0, 0, 0]
 let checkedBoxes = 0;
 
 let mfv = 0
-
-var qr = new QRious({
+let qrcode = new QRCode(document.getElementById("qr"), {
+    text:"",
+    width:document.body.clientWidth*.95,
+    height:document.body.clientWidth*.95,    
+    padding: 0,
+    correctLevel : QRCode.CorrectLevel.H
+});
+/*var qr = new QRious({
     element: document.getElementById('qr'),
 });
 qr.level = 'L';
-qr.size = document.body.clientWidth-20;//all the qr code bs
+qr.size = document.body.clientWidth-20;//all the qr code bs */
 function checkCBoxes(x) {//check box unchecking code
     switch (x) {
         case 0:
@@ -73,19 +79,19 @@ b4.addEventListener("click", () => {
 
 
 b1.addEventListener("dblclick", () => {
-    bVals[0]--;
+    bVals[0]-=3;
     b1.innerText = bVals[0]
 })
 b2.addEventListener("dblclick", () => {
-    bVals[1]--;
+    bVals[1]-=3;
     b2.innerText = bVals[1]
 })
 b3.addEventListener("dblclick", () => {
-    bVals[2]--;
+    bVals[2]-=3;
     b3.innerText = bVals[2]
 })
 b4.addEventListener("dblclick", () => {
-    bVals[3]--;
+    bVals[3]-=3;
     b4.innerText = bVals[3]
 })
 
@@ -134,11 +140,14 @@ pb.addEventListener("click", () => {
             }
         }
         if(i!=Object.keys(vals).length-1){
-            qrOut+=";"
+            qrOut+=","
         }
     }
     console.log(qrOut)
-    qr.value = qrOut
+    //qr.value = qrOut
+    qrcode.clear()
+    qrcode.makeCode(qrOut);
+
     bVals = [0, 0, 0, 0]
     checkedBoxes = 0
 

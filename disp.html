@@ -10,8 +10,8 @@
             <div id="radialdiv" style="width:100vw;height:100vw;flex-shrink: 0;">
                 <canvas id="radial" style="width:100%;"></canvas>
             </div>
-            <div id="qrfr">
-                <div style="width: 100%; height: 30%;background-color: red;flex-shrink: 0;" id="cbox"></div>
+            <div id="qrfr" style="margin-top: 1%;">
+                <div style="width: 100%; height: 25%;background-color: red;flex-shrink: 0;" id="cbox"></div>
                 <div style="width: 100%; height: 70%;" id="reader"></div>
             </div>
             
@@ -21,9 +21,9 @@
             <div id="linediv"style="width:100%;flex-shrink: 0;">
                 <canvas id="line" style="width:100%"></canvas>
             </div>
-            <canvas id="qr"></canvas>
+            <div id="qr"></div>
         </div>
-        <script src="qrcodecode.js"></script>
+        <script type="text/javascript" src="qrcode.js"></script>
         <script src="./html5-qrcode.min.js"></script>
         <script src="package/dist/chart.js"></script>
         <script src="disp_s.js"></script>
@@ -40,24 +40,27 @@
                 div.style.flexDirection = "row"
                 div.style.flexFlow = "wrap"
 
-                radial.style.marginLeft = "-10%"
-                radial.style.width = "50%"
+                //radial.style.marginLeft = "-10%"
+                radial.style.width = "40%"
                 radial.style.height = "40%"
                 
-                cycam.style.width = "30vw"
+                cycam.style.width = "35vw"
                 cycam.style.height = "40vh"
                 line.style.width = "50vw"
                 line.style.height = "45%"
-                allteams.style.width = "30%"
+                allteams.style.width = "25%"
                 allteams.style.height = "40%"
-                qr.style.width = "50vh"
-                qr.style.height = "50vh"
-                qr.style.marginTop ="5%"
+                qr.style.width = "45vw"
+                qr.style.height = "45vw"
+                qr.style.marginTop ="10%"
                 line.style.marginTop = "25%"
-                line.style.marginRight ="50%"
+                line.style.marginRight ="5%"
 
             }else{
-
+                let qr = document.getElementById("qr")
+                qr.style.width = "90vw"
+                qr.style.height = "95vw"
+                qr.style.marginLeft = "5vw"
             }
         </script>
     </body>

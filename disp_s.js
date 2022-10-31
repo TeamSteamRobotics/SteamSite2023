@@ -1,6 +1,7 @@
 let vals = {}
 let del = 0;
 let cbox = document.getElementById("cbox");
+
 function onScanSuccess(decodedText, decodedResult) {
   // Handle on success condition with the decoded text or result.
   console.log(`Scan result: ${decodedText}`);
@@ -9,9 +10,10 @@ function onScanSuccess(decodedText, decodedResult) {
 }
 function onScanFailure(decodedText, decodedResult){
   scandler(0)
+  console.log(`Scan result fail: ${decodedText}`);
 }
 var html5QrcodeScanner = new Html5QrcodeScanner(//scans qr
-  "reader", { fps: 10 });
+  "reader", { fps: 10});
 html5QrcodeScanner.render(onScanSuccess,onScanFailure);
 function scandler(x){
   del += x
@@ -23,7 +25,7 @@ function scandler(x){
   }
 }
 function qrToJson(input) {
-  let tempa = input.split(";")//splits out diferent teams
+  let tempa = input.split(",")//splits out diferent teams
   for (let i = 0; i < tempa.length; i++) {
     let tempb = tempa[i].split(":")//splits team and data
 
@@ -40,7 +42,6 @@ function qrToJson(input) {
   updateAllList()
   genQr()
 }
-
 //qr code shit end
 let cl = document.getElementById("clear");
 let bs = document.getElementById("bs");//all page swapping code
@@ -299,17 +300,20 @@ const allchart = new Chart(
 );
   //store pit scouting data localy and transfer from paper
 
+let size;
 
-
-  var qr = new QRious({
-    element: document.getElementById('qr'),
-});
-qr.level = 'L';
 if(document.body.clientHeight>document.body.clientWidth){
-  qr.size = document.body.clientWidth
+  size = document.body.clientWidth *.9
 }else{
-  qr.size = document.body.clientHeight
+  size = document.body.clientWidth * .40
 }
+
+  let qrcode = new QRCode(document.getElementById("qr"), {
+    width : size,
+    height : size,
+    text: " "
+  });
+
 qr.value = qrOut
   function genQr(){
     qrOut = ""
@@ -330,9 +334,11 @@ qr.value = qrOut
             }
         }
         if(i!=Object.keys(vals).length-1){
-            qrOut+=";"
+            qrOut+=","
         }
     }
-    qr.value = qrOut
+   // console.log(qrOut)
+    qrcode.clear()
+    qrcode.makeCode(qrOut)
   }
   
