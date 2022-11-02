@@ -1,20 +1,83 @@
-let vals = {}
 let del = 0;
 let cbox = document.getElementById("cbox");
+let last = ""
+let qrOut = ""
+let team = document.getElementById("teamnum")
+let teamnum = 0
 
+function cookiecoder(cookie,value){
+  let name = value + "=";
+let decodedCookie = decodeURIComponent(cookie);
+let ca = decodedCookie.split(';');
+for(let i = 0; i <ca.length; i++) {
+  let c = ca[i];
+  while (c.charAt(0) == ' ') {
+    c = c.substring(1);
+  }
+  if (c.indexOf(name) == 0) {
+    return c.substring(name.length, c.length);
+  }
+}
+return null;
+}
 function onScanSuccess(decodedText, decodedResult) {
   // Handle on success condition with the decoded text or result.
-  console.log(`Scan result: ${decodedText}`);
-  qrToJson(decodedText)
-  scandler(10)
+  if(last!=decodedText){
+    console.log(`Scan result: ${decodedText}`);
+    qrToJson(decodedText)
+    scandler(10)
+    last = decodedText
+  }
 }
 function onScanFailure(decodedText, decodedResult){
   scandler(0)
-  console.log(`Scan result fail: ${decodedText}`);
+  //console.log(`Scan result fail: ${decodedText}`);
 }
 var html5QrcodeScanner = new Html5QrcodeScanner(//scans qr
   "reader", { fps: 10});
 html5QrcodeScanner.render(onScanSuccess,onScanFailure);
+if(cookiecoder(document.cookie,"vals")==null){
+  document.cookie="vals={}"
+}
+if(cookiecoder(document.cookie,"pitData")==null){
+  document.cookie="pitData={}"
+}
+let size;
+
+let vals = JSON.parse(cookiecoder(document.cookie,"vals"))
+if(document.body.clientHeight>document.body.clientWidth){
+  size = document.body.clientWidth *.9
+}else{
+  size = document.body.clientWidth * .40
+}
+
+  let qrcode = new QRCode(document.getElementById("qr"), {
+    width : size,
+    height: size,
+    text: " "
+  });
+if(vals!={}){
+  qrgen()
+}
+
+let textBoxes = [document.getElementById("t1"),document.getElementById("t2"),document.getElementById("t3"),document.getElementById("t4"),document.getElementById("t5")]
+function pitHandler(index){
+  teamnum = parseInt(team.value)
+  if(team.value.trim() != ""){
+  pitVals = JSON.parse(cookiecoder(document.cookie,"pitData"))
+  if(pitVals[teamnum] == undefined){
+    pitVals[teamnum] =[]
+  }
+  while(pitVals[teamnum].length<5){
+    pitVals[teamnum].push("")
+  }  
+  pitVals[teamnum][index]=textBoxes[index].value
+  document.cookie = "pitData="+JSON.stringify(pitVals)
+  //console.log(document.cookie)
+  }else{
+    alert("add team number before writing pit scouting data")
+  }
+}
 function scandler(x){
   del += x
   if(del>0){
@@ -40,7 +103,7 @@ function qrToJson(input) {
     }
   }
   updateAllList()
-  genQr()
+  qrgen()
 }
 //qr code shit end
 let cl = document.getElementById("clear");
@@ -50,7 +113,9 @@ bs.addEventListener("click", () => {
 })
 cl.addEventListener("click", () => {
   vals = {}
-  genQr()
+  document.cookie = "vals={}"
+  document.cookie = "pitData={}"
+  qrgen()
   for(i=0;i<100;i++){
     allchart.data.datasets.forEach((dataset) => {
       dataset.data.pop();
@@ -61,18 +126,15 @@ cl.addEventListener("click", () => {
   console.log(vals)
 })
 
-
-let qrOut = ""
-let team = document.getElementById("teamnum")
-let teamnum = 0
-
-team.addEventListener("input", () => {//when you type in a team this runs
+team.addEventListener("blur", () => {//when you type in a team this runs
   teamnum = parseInt(team.value)
   if (vals[teamnum] != undefined) {//makes sure team is on vals
     updateVals()
   }
+  updatePit()
 })
 function updateAllList() {
+  allchart.reset();
   let ls = []
   for (i = 0; i < Object.keys(vals).length; i++) {
     let teamnum = parseInt(Object.keys(vals)[i])
@@ -94,8 +156,9 @@ function updateAllList() {
     });
     allchart.data.labels.pop();
   }
+  allchart.update();
   ls.sort((a, b) => { if (a[4] > b[4]) {return 1} else if (a[4] < b[4]) { return -1 } return 0 })
-
+  console.log(ls)
 
   for(i = 0;i<ls.length;i++){
     let cval = ls.length-i-1
@@ -154,7 +217,8 @@ function updateVals() {//updates the garpghs
           break;
       }
     });
-
+    
+    
   }
   for (let t = 0; t < nv.length; t++) {//divides the newvalues by total rounds
     nv[t] = nv[t] / totalRound
@@ -162,11 +226,21 @@ function updateVals() {//updates the garpghs
   radial.data.datasets.forEach((dataset) => {
     dataset.data = nv //output in radial graph
   });
-
   line.update();
   radial.update();
 }
-
+function updatePit(){
+  let pitVals = JSON.parse(cookiecoder(document.cookie,"pitData"))
+  if(pitVals[teamnum] == undefined){
+    pitVals[teamnum] =[]
+  }
+  while(pitVals[teamnum].length<5){
+    pitVals[teamnum].push("")
+  }         
+  for(let i=0;i<pitVals[teamnum].length;i++){
+      textBoxes[i].value = pitVals[teamnum][i]
+  }
+}
 const radialdata = {
   labels: [
     'TeleUp',
@@ -228,7 +302,8 @@ const lineconfig = {
   type: 'line',
   data: linedata,
   options: {
-    responsive: false,
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       r: {
         suggestedMin: 0,
@@ -275,14 +350,15 @@ const allconfig = {
   type: 'bar',
   data: alldata,
   options: {
+    maintainAspectRatio: false,
+    responsive: true,
     indexAxis: 'y',
     plugins: {
       title: {
-        display: true,
+        //display: true,
         text: 'Chart.js Bar Chart - Stacked'
       },
     },
-    responsive: false,
     scales: {
       x: {
         stacked: true,
@@ -298,24 +374,11 @@ const allchart = new Chart(
   document.getElementById('allteams'),
   allconfig
 );
+
   //store pit scouting data localy and transfer from paper
 
-let size;
-
-if(document.body.clientHeight>document.body.clientWidth){
-  size = document.body.clientWidth *.9
-}else{
-  size = document.body.clientWidth * .40
-}
-
-  let qrcode = new QRCode(document.getElementById("qr"), {
-    width : size,
-    height : size,
-    text: " "
-  });
-
 qr.value = qrOut
-  function genQr(){
+  function qrgen(){
     qrOut = ""
     for(let i = 0;i<Object.keys(vals).length;i++){//finds all the teams
         let iVal = vals[Object.keys(vals)[i]]
@@ -341,4 +404,7 @@ qr.value = qrOut
     qrcode.clear()
     qrcode.makeCode(qrOut)
   }
-  
+  updateAllList()
+  if(document.body.clientHeight>document.body.clientWidth){
+    qrcode.width = document.body.clientWidth * .40
+  }

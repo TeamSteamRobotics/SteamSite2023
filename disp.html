@@ -11,22 +11,33 @@
                 <canvas id="radial" style="width:100%;"></canvas>
             </div>
             <div id="qrfr" style="margin-top: 1%;">
-                <div style="width: 100%; height: 25%;background-color: red;flex-shrink: 0;" id="cbox"></div>
-                <div style="width: 100%; height: 70%;" id="reader"></div>
+                <div style="width: 70%; height: 25%;background-color: red;flex-shrink: 0;" id="cbox"></div>
+                <div style="width: 70%;" id="reader"></div>
             </div>
             
             <div id="allteamsdiv"style="height:30%;width:100vw; overflow: hidden;flex-shrink: 0;">
-                <canvas id="allteams" style="width: 100%;"></canvas>
+                <canvas id="allteams" style="width: 100%;height: 100%;"></canvas>
             </div>
             <div id="linediv"style="width:100%;flex-shrink: 0;">
                 <canvas id="line" style="width:100%"></canvas>
             </div>
             <div id="qr"></div>
+            <div class="textBoxes">
+                <h1 style="grid-row: row0;">Drive</h1>
+                <h1 style="grid-row: row1;">Auto</h1>
+                <h1 style="grid-row: row2;">Climb</h1>
+                <h1 style="grid-row: row3;">Shoot</h1>
+                <h1 style="grid-row: row4;">Cycle</h1>
+                <textarea id="t1" onkeyup="pitHandler(0)" class="textInput" style="grid-row: row0; "></textarea>
+                <textarea id="t2" onkeyup="pitHandler(1)" class="textInput" style="grid-row: row1; "></textarea>
+                <textarea id="t3" onkeyup="pitHandler(2)" class="textInput" style="grid-row: row2; "></textarea>
+                <textarea id="t4" onkeyup="pitHandler(3)" class="textInput" style="grid-row: row3; "></textarea>
+                <textarea id="t5" onkeyup="pitHandler(4)" class="textInput" style="grid-row: row4; "></textarea>
+            </div>
         </div>
         <script type="text/javascript" src="qrcode.js"></script>
         <script src="./html5-qrcode.min.js"></script>
         <script src="package/dist/chart.js"></script>
-        <script src="disp_s.js"></script>
         <script>
             if(document.body.clientHeight<document.body.clientWidth){
                 let div = document.getElementById("thediv")
@@ -44,24 +55,32 @@
                 radial.style.width = "40%"
                 radial.style.height = "40%"
                 
-                cycam.style.width = "35vw"
+                cycam.style.width = "30vw"
                 cycam.style.height = "40vh"
                 line.style.width = "50vw"
-                line.style.height = "45%"
-                allteams.style.width = "25%"
-                allteams.style.height = "40%"
+                line.style.height = "60%"
+                allteams.style.width = "35%"
+                allteams.style.height = "60%"
+                allteams.style.marginLeft="-7%"
+                allteams.style.marginBottom = "-5%"
                 qr.style.width = "45vw"
                 qr.style.height = "45vw"
                 qr.style.marginTop ="10%"
-                line.style.marginTop = "25%"
+                line.style.marginTop = "15%"
                 line.style.marginRight ="5%"
 
             }else{
                 let qr = document.getElementById("qr")
+                let cam = document.getElementById("reader")
+                let bar = document.getElementById("cbox")
                 qr.style.width = "90vw"
                 qr.style.height = "95vw"
                 qr.style.marginLeft = "5vw"
+                qr.style.marginTop = "5%"
+                cam.style.width = "100%"
+                bar.style.width = "100%"
             }
         </script>
+        <script src="disp_s.js"></script>
     </body>
 </html>
