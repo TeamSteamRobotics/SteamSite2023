@@ -16,6 +16,8 @@ let bVals = [0, 0, 0, 0]
 let checkedBoxes = 0;
 let mfv = 0
 
+let version = 1.2
+
 function checkCBoxes(x) {//check box unchecking code
     switch (x) {
         case 0:
@@ -42,13 +44,11 @@ function checkCBoxes(x) {//check box unchecking code
     }
 
 }
-
-function buttonHandler(index, value){
+function buttonHandler(index, value){//handels all the buttons
     bVals[index] += value
     buttons[index].innerText = bVals[index]
 }
-
-function cookiecoder(cookie,value){
+function cookiecoder(cookie,value){//decodes cookies
     let name = value + "=";
   let decodedCookie = decodeURIComponent(cookie);
   let ca = decodedCookie.split(';');
@@ -63,11 +63,12 @@ function cookiecoder(cookie,value){
   }
   return null;
 }
-
-function qrgen(){
+function qrgen(){//genrates qr codes
     let qrOut = ""
+    let temp = JSON.parse(cookiecoder(document.cookie,"vals"))
     for(let i = 0;i<Object.keys(vals).length;i++){//finds all the teams
         let iVal = vals[Object.keys(vals)[i]]
+        temp[Object.keys(vals)[i]] = iVal
         qrOut+=Object.keys(vals)[i]+":"//adds them to a certain spot
         for(let j= 0;j<Object.keys(iVal).length;j++){//finds all the rounds
             let jVal = iVal[Object.keys(iVal)[j]]
@@ -86,13 +87,11 @@ function qrgen(){
             qrOut+=","
         }
     }
-    document.cookie="vals="+JSON.stringify(vals)
-    console.log(document.cookie)
-    console.log(qrOut)
-    //qr.value = qrOut
+    console.log(temp)
     qrcode.clear()
     qrcode.makeCode(qrOut);
-
+    document.cookie="vals="+JSON.stringify(temp)
+    console.log(document.cookie)
     bVals = [0, 0, 0, 0]
     checkedBoxes = 0
 
@@ -122,14 +121,19 @@ let qrcode = new QRCode(document.getElementById("qr"), {
 if(cookiecoder(document.cookie,"vals")==null){
     document.cookie="vals={}"
 }
+if(parseFloat(cookiecoder(document.cookie,"version"))<version){
+    document.cookie="vals={}"
+    document.cookie="pitData={}"
+    document.cookie="version="+version
+}
+if(cookiecoder(document.cookie,"version")==null){
+    document.cookie="version="+version
+}
+
 let vals = JSON.parse(cookiecoder(document.cookie,"vals"))
 if(vals!={}){
     qrgen()
 }
-
-//document.cookie = "vals=;expires=Thu, 01 Jan 1970 00:00:00 UTC;"
-
-//all of these just add to clickers
 
 c1.addEventListener("click", () => {
     checkedBoxes = 4
@@ -148,24 +152,28 @@ bs.addEventListener("click", () => {
     window.location.href = "disp.html";
 })
 
-pb.addEventListener("click", () => {
+pb.addEventListener("click", () => {//pushes values
     let teamnum = parseInt(team.value)
     let roundnum = parseInt(round.value)//gets round and team vals
     if(team.value.trim() != ""&&round.value.trim() !=""){//checks to see if they both are filled out
-        let nv = [ bVals[0], bVals[1], bVals[2], bVals[3], checkedBoxes, mfv]
+        if(teamnum>0 && roundnum>0){
+            let nv = [ bVals[0], bVals[1], bVals[2], bVals[3], checkedBoxes, mfv]
     if (vals[teamnum] == undefined) {
         vals[teamnum] = {}
     }
     vals[teamnum][roundnum] = nv// makes the spot equal to the vals
+    qrgen()
+        }else{
+            alert("round and team numbers must not include letters")
+        }
+        
 }else{
     alert("add a team number and round number before pushing")
 }
-qrgen()
 })
-cl.addEventListener("click", () => {
+cl.addEventListener("click", () => {//clears values
     vals = {}
-    document.cookie="vals="+JSON.stringify(vals)
 })
-function mf(){
+document.getElementById("mf").addEventListener("click", () => {
     mfv = 1
-}
+})

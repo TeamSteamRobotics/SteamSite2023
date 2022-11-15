@@ -4,8 +4,25 @@ let last = ""
 let qrOut = ""
 let team = document.getElementById("teamnum")
 let teamnum = 0
+let size;
+let textBoxes = [document.getElementById("t1"),document.getElementById("t2"),document.getElementById("t3"),document.getElementById("t4"),document.getElementById("t5")]
 
-function cookiecoder(cookie,value){
+let version = 1.2
+
+function onScanSuccess(decodedText, decodedResult) {//on succes
+  // Handle on success condition with the decoded text or result.
+  if(last!=decodedText){
+    console.log(`Scan result: ${decodedText}`);
+    qrToJson(decodedText)
+    scandler(10)
+    last = decodedText
+  }
+}
+function onScanFailure(decodedText, decodedResult){//on fail
+  scandler(0)
+  //console.log(`Scan result fail: ${decodedText}`);
+}
+function cookiecoder(cookie,value){//decodes cookies
   let name = value + "=";
 let decodedCookie = decodeURIComponent(cookie);
 let ca = decodedCookie.split(';');
@@ -20,74 +37,7 @@ for(let i = 0; i <ca.length; i++) {
 }
 return null;
 }
-function onScanSuccess(decodedText, decodedResult) {
-  // Handle on success condition with the decoded text or result.
-  if(last!=decodedText){
-    console.log(`Scan result: ${decodedText}`);
-    qrToJson(decodedText)
-    scandler(10)
-    last = decodedText
-  }
-}
-function onScanFailure(decodedText, decodedResult){
-  scandler(0)
-  //console.log(`Scan result fail: ${decodedText}`);
-}
-var html5QrcodeScanner = new Html5QrcodeScanner(//scans qr
-  "reader", { fps: 10});
-html5QrcodeScanner.render(onScanSuccess,onScanFailure);
-if(cookiecoder(document.cookie,"vals")==null){
-  document.cookie="vals={}"
-}
-if(cookiecoder(document.cookie,"pitData")==null){
-  document.cookie="pitData={}"
-}
-let size;
-
-let vals = JSON.parse(cookiecoder(document.cookie,"vals"))
-if(document.body.clientHeight>document.body.clientWidth){
-  size = document.body.clientWidth *.9
-}else{
-  size = document.body.clientWidth * .40
-}
-
-  let qrcode = new QRCode(document.getElementById("qr"), {
-    width : size,
-    height: size,
-    text: " "
-  });
-if(vals!={}){
-  qrgen()
-}
-
-let textBoxes = [document.getElementById("t1"),document.getElementById("t2"),document.getElementById("t3"),document.getElementById("t4"),document.getElementById("t5")]
-function pitHandler(index){
-  teamnum = parseInt(team.value)
-  if(team.value.trim() != ""){
-  pitVals = JSON.parse(cookiecoder(document.cookie,"pitData"))
-  if(pitVals[teamnum] == undefined){
-    pitVals[teamnum] =[]
-  }
-  while(pitVals[teamnum].length<5){
-    pitVals[teamnum].push("")
-  }  
-  pitVals[teamnum][index]=textBoxes[index].value
-  document.cookie = "pitData="+JSON.stringify(pitVals)
-  //console.log(document.cookie)
-  }else{
-    alert("add team number before writing pit scouting data")
-  }
-}
-function scandler(x){
-  del += x
-  if(del>0){
-    del--
-    cbox.style.backgroundColor = "#00FF00"
-  }else{
-    cbox.style.backgroundColor = "red"
-  }
-}
-function qrToJson(input) {
+function qrToJson(input) {//qr in json out
   let tempa = input.split(",")//splits out diferent teams
   for (let i = 0; i < tempa.length; i++) {
     let tempb = tempa[i].split(":")//splits team and data
@@ -105,35 +55,60 @@ function qrToJson(input) {
   updateAllList()
   qrgen()
 }
-//qr code shit end
-let cl = document.getElementById("clear");
-let bs = document.getElementById("bs");//all page swapping code
-bs.addEventListener("click", () => {
-  window.location.href = "main.html";
-})
-cl.addEventListener("click", () => {
-  vals = {}
-  document.cookie = "vals={}"
-  document.cookie = "pitData={}"
-  qrgen()
-  for(i=0;i<100;i++){
-    allchart.data.datasets.forEach((dataset) => {
-      dataset.data.pop();
-    });
-    allchart.data.labels.pop();
+function qrgen(){//generates qr code
+  qrOut = ""
+  for(let i = 0;i<Object.keys(vals).length;i++){//finds all the teams
+      let iVal = vals[Object.keys(vals)[i]]
+      qrOut+=Object.keys(vals)[i]+":"//adds them to a certain spot
+      for(let j= 0;j<Object.keys(iVal).length;j++){//finds all the rounds
+          let jVal = iVal[Object.keys(iVal)[j]]
+          qrOut+=Object.keys(iVal)[j]+"."//adds them to the list
+          for(let l = 0;l<6;l++){//adds all the vals
+             qrOut+=jVal[l]
+             if(l!=5){
+              qrOut+="."
+             }
+          }
+          if(j!=Object.keys(iVal).length-1){
+            qrOut+="."  
+          }
+      }
+      if(i!=Object.keys(vals).length-1){
+          qrOut+=","
+      }
   }
-  updateAllList()
-  console.log(vals)
-})
-
-team.addEventListener("blur", () => {//when you type in a team this runs
+ // console.log(qrOut)
+ document.cookie = "vals="+JSON.stringify(vals)
+  qrcode.clear()
+  qrcode.makeCode(qrOut)
+}
+function pitHandler(index){//handles changes in pit scouting data
   teamnum = parseInt(team.value)
-  if (vals[teamnum] != undefined) {//makes sure team is on vals
-    updateVals()
+  if(team.value.trim() != ""){
+  pitVals = JSON.parse(cookiecoder(document.cookie,"pitData"))
+  if(pitVals[teamnum] == undefined){
+    pitVals[teamnum] =[]
   }
-  updatePit()
-})
-function updateAllList() {
+  while(pitVals[teamnum].length<5){
+    pitVals[teamnum].push("")
+  }  
+  pitVals[teamnum][index]=textBoxes[index].value
+  document.cookie = "pitData="+JSON.stringify(pitVals)
+  //console.log(document.cookie)
+  }else{
+    alert("add team number before writing pit scouting data")
+  }
+}
+function scandler(x){//scan handler
+  del += x
+  if(del>0){
+    del--
+    cbox.style.backgroundColor = "#00FF00"
+  }else{
+    cbox.style.backgroundColor = "red"
+  }
+}
+function updateAllList() {//updates all teams list
   allchart.reset();
   let ls = []
   for (i = 0; i < Object.keys(vals).length; i++) {
@@ -158,7 +133,7 @@ function updateAllList() {
   }
   allchart.update();
   ls.sort((a, b) => { if (a[4] > b[4]) {return 1} else if (a[4] < b[4]) { return -1 } return 0 })
-  console.log(ls)
+  //console.log(ls)
 
   for(i = 0;i<ls.length;i++){
     let cval = ls.length-i-1
@@ -181,7 +156,7 @@ function updateAllList() {
   }
   allchart.update();
 }
-function updateVals() {//updates the garpghs
+function updateVals() {//updates all the garpghs
   for (let i = 0; i < 13; i++) {//deletes all the stuff
     line.data.datasets.forEach((dataset) => {
       dataset.data.pop();
@@ -229,7 +204,8 @@ function updateVals() {//updates the garpghs
   line.update();
   radial.update();
 }
-function updatePit(){
+function updatePit(){//
+  //updates pit scouting data
   let pitVals = JSON.parse(cookiecoder(document.cookie,"pitData"))
   if(pitVals[teamnum] == undefined){
     pitVals[teamnum] =[]
@@ -241,7 +217,71 @@ function updatePit(){
       textBoxes[i].value = pitVals[teamnum][i]
   }
 }
-const radialdata = {
+if(parseFloat(cookiecoder(document.cookie,"version"))<version){
+  document.cookie="vals={}"
+  document.cookie="pitData={}"
+  document.cookie="version="+version
+}
+if(cookiecoder(document.cookie,"version")==null){
+  document.cookie="version="+version
+}
+var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10})//scanner for qr codes
+html5QrcodeScanner.render(onScanSuccess,onScanFailure);//renders camera for scanner
+
+if(document.body.clientHeight>document.body.clientWidth){//gets size the qr code should be
+  size = document.body.clientWidth *.9
+}else{
+  size = document.body.clientWidth * .40
+}
+let qrcode = new QRCode(document.getElementById("qr"), {
+  width : size,
+  height: size,
+  text: " "
+});
+
+if(cookiecoder(document.cookie,"vals")==null){//adds vals to cookie
+  document.cookie="vals={}"
+}
+if(cookiecoder(document.cookie,"pitData")==null){//adds pit data to cookies
+  document.cookie="pitData={}"
+}
+let vals = JSON.parse(cookiecoder(document.cookie,"vals"))//sets vals var to the vals in cookies
+
+if(vals!={}){//if there is stuff to generate it will
+  qrgen()
+}
+
+let cl = document.getElementById("clear");
+let bs = document.getElementById("bs");//all page swapping code
+bs.addEventListener("click", () => {
+  window.location.href = "main.html";
+})
+cl.addEventListener("click", () => {//clears crap
+  vals = {}
+  document.cookie = "vals={}"
+  document.cookie = "pitData={}"
+  qrgen()
+  for(i=0;i<100;i++){
+    allchart.data.datasets.forEach((dataset) => {
+      dataset.data.pop();
+    });
+    allchart.data.labels.pop();
+  }
+  updateAllList()
+  for(let i = 0;i<textBoxes.length;i++){
+    textBoxes[i].value = ""
+  }
+  console.log(vals)
+})
+team.addEventListener("blur", () => {//when you type in a team this runs
+  teamnum = parseInt(team.value)
+  if (vals[teamnum] != undefined) {//makes sure team is on vals
+    updateVals()
+  }
+  updatePit()
+})
+
+const radialdata = {//data for radial
   labels: [
     'TeleUp',
     'TeleDown',
@@ -263,8 +303,7 @@ const radialdata = {
     pointHoverBorderColor: 'rgb(255, 99, 132)'
   }],
 };
-
-const radialconfig = {
+const radialconfig = {//config for radial
   type: 'radar',
   data: radialdata,
   options: {
@@ -280,6 +319,8 @@ const radialconfig = {
     },
   }
 };
+const radial = new Chart(document.getElementById('radial'), radialconfig);//setup for radial
+
 const linedata = {
   labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
   datasets: [{
@@ -297,7 +338,6 @@ const linedata = {
     borderColor: "rgb(0, 0, 255)",
   }],
 };
-
 const lineconfig = {
   type: 'line',
   data: linedata,
@@ -317,14 +357,7 @@ const lineconfig = {
     },
   }
 };
-
-const radial = new Chart(document.getElementById('radial'), radialconfig);
-const line = new Chart(
-  document.getElementById('line'),
-  lineconfig
-);
-
-
+const line = new Chart(document.getElementById('line'),lineconfig);
 
 const alldata = {
   labels: [],
@@ -369,42 +402,6 @@ const allconfig = {
     }
   }
 };
+const allchart = new Chart(document.getElementById('allteams'),allconfig);
 
-const allchart = new Chart(
-  document.getElementById('allteams'),
-  allconfig
-);
-
-  //store pit scouting data localy and transfer from paper
-
-qr.value = qrOut
-  function qrgen(){
-    qrOut = ""
-    for(let i = 0;i<Object.keys(vals).length;i++){//finds all the teams
-        let iVal = vals[Object.keys(vals)[i]]
-        qrOut+=Object.keys(vals)[i]+":"//adds them to a certain spot
-        for(let j= 0;j<Object.keys(iVal).length;j++){//finds all the rounds
-            let jVal = iVal[Object.keys(iVal)[j]]
-            qrOut+=Object.keys(iVal)[j]+"."//adds them to the list
-            for(let l = 0;l<6;l++){//adds all the vals
-               qrOut+=jVal[l]
-               if(l!=5){
-                qrOut+="."
-               }
-            }
-            if(j!=Object.keys(iVal).length-1){
-              qrOut+="."  
-            }
-        }
-        if(i!=Object.keys(vals).length-1){
-            qrOut+=","
-        }
-    }
-   // console.log(qrOut)
-    qrcode.clear()
-    qrcode.makeCode(qrOut)
-  }
-  updateAllList()
-  if(document.body.clientHeight>document.body.clientWidth){
-    qrcode.width = document.body.clientWidth * .40
-  }
+updateAllList()
