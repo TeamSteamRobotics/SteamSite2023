@@ -14,7 +14,7 @@ step 3: decide on how you will present your data to the scouters, what buttons, 
 
 action 4: im going to give the users 2 buttons for the seesaw and 5 for the game peices with them having to scroll to get between auto and teleop
 
-tech 4:(techs will describe specifics in programing) to do this you have to creat grid or flex divs in style.css to fill with buttons and numbers and whatever other shenainagins or pictures you would like
+tech 4:(techs will describe specifics in programing) to do this you have to creat grid or flex divs in style.css to fill with buttons and numbers and whatever other shenainagins or pictures you would like, DONT TOUCH DISP YET, ONLY MAIN, ps anything in the boilerplate style.css is used and should not be deleted, edits can and should be m,ade to disp but they should not be as durastic as the ones to main
 
 step 5: backend programing to make the buttons actualy make data
 
