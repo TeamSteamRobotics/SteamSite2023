@@ -1,6 +1,7 @@
 # SteamSite-Boilerplate
 the bare bones commented steam site frame
-# in this file i will write down what i needed to do from the boilerplate to get to the 2023 final product, this hsould be followed looseley and looked at as ONE of the posible way to write a steamsite
+# in this file i will write down what i needed to do from the boilerplate to get to the 2023 final product, this sould be followed looseley and looked at as ONE of the possible ways to write a steamsite
+
 step 1: (steps are what you should do) decide what your storing, try not to store evry minute deataiol but keep enough in that you can get some good data
 
 action 1: (actions are what i did) i decided to mark bothe top and mid levels individualy for boxes and cones but the bottom level wath both cones and cubes
