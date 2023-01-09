@@ -74,7 +74,7 @@ function checkMax(x){
 }
 function encrypt(x,tn,rn){
     let out =""
-    //checkMax(x)
+    checkMax(x)
     for(i = 0;i<x.length;i++){
         let binLen = 2;
         switch (i) {
@@ -98,7 +98,7 @@ function encrypt(x,tn,rn){
             out+="0"
         }
         out+=x[i].toString(2)
-        console.log(i)
+        console.log(x[i].toString(2))
     }
     return out
 }
@@ -109,7 +109,7 @@ function push(){
     if(team.value.trim() != ""&&round.value.trim() !=""){//checks to see if they both are filled out
         if(teamnum>0 && roundnum>0){
             pushString += encrypt(buttonVals,teamnum,roundnum)
-            let pushVals = [buttonVals[0],buttonVals[1],buttonVals[2],buttonVals[3],buttonVals[4],buttonVals[5],buttonVals[6]]
+            let pushVals = [buttonVals[0],buttonVals[1],buttonVals[2],buttonVals[3],buttonVals[4],buttonVals[5],buttonVals[6],buttonVals[7]]
     if (vals[teamnum] == undefined) {
         vals[teamnum] = {}
     }
