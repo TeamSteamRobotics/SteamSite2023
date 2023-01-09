@@ -9,11 +9,20 @@ let textBoxes = [document.getElementById("t1"),document.getElementById("t2"),doc
 
 let version = 1.2
 
+function decrypt(x){
+  output = "";
+  for (var i = 0; i < x.length; i++) {
+      output += x[i].charCodeAt(0).toString(2) + " ";
+  }
+  console.log(output)
+  return output;
+}
 function onScanSuccess(decodedText, decodedResult) {//on succes
   // Handle on success condition with the decoded text or result.
   if(last!=decodedText){
+
     console.log(`Scan result: ${decodedText}`);
-    qrToJson(decodedText)
+    qrToJson(decodedText) 
     scandler(10)
     last = decodedText
   }
@@ -283,17 +292,19 @@ team.addEventListener("blur", () => {//when you type in a team this runs
 
 const radialdata = {//data for radial
   labels: [
-    'TeleUp',
-    'TeleDown',
-    'AutoUp',
-    'AutoDown',
-    'AutoAll',
-    'TeleAll',
-    'ClimbAll'
+    'ConeUp',
+    'ConeDown',
+    'ConeTotal',
+    'bottomTotal',
+    'Cubetotal',
+    'CubeDown',
+    'CubeUp',
+    'dockAver',
+    'LevelAver'
   ],
   datasets: [{
     label: 'Average Scores',
-    data: [1, 2, 3, 4, 5, 6, 7],
+    data: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     fill: true,
     backgroundColor: 'rgba(255, 99, 132, 0.2)',
     borderColor: 'rgb(255, 99, 132)',
@@ -324,16 +335,16 @@ const radial = new Chart(document.getElementById('radial'), radialconfig);//setu
 const linedata = {
   labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
   datasets: [{
-    label: "teleop",
+    label: "coneTotal",
     data: [1, 2, 3, 4, 5, 6],
     borderColor: "rgb(255, 0, 0)",
   }, {
 
-    label: "auto",
+    label: "cubeTotal",
     data: [4, 2, 3, 4, 5, 6],
     borderColor: "rgb(0, 255, 0)",
   }, {
-    label: 'climb',
+    label: 'docked',
     data: [1, 2, 3, 8, 5, 6],
     borderColor: "rgb(0, 0, 255)",
   }],
@@ -363,17 +374,17 @@ const alldata = {
   labels: [],
   datasets: [
     {
-      label: 'teleop',
+      label: 'coneTotal',
       data: [],
       backgroundColor: "rgb(255, 0, 0)",
     },
     {
-      label: 'auto',
+      label: 'cubeTotal',
       data: [],
       backgroundColor: "rgb(0, 255, 0)",
     },
     {
-      label: 'climb',
+      label: 'docked',
       data: [],
       backgroundColor: "rgb(0, 0, 255)",
     },
