@@ -3,9 +3,10 @@ let team = document.getElementById("teamnum")
 //let mf = document.getElementById("mf");//major failure button
 let version = 1.2
 
+let pushString = ""
 
-let buttons = [document.getElementById("b1"),document.getElementById("b2"),document.getElementById("b3"),document.getElementById("b4")]
-let buttonVals = [0, 0, 0, 0, 0, 0, 0]
+let buttonVals = [8, 3, 2, 4, 5, 1, 0]
+let maxVals = [9, 3, 3, 6, 6, 1, 1]
 let checkedBoxes = 0;
 let mfv = 0
 
@@ -15,9 +16,9 @@ function buttonVal(i, x){//changes values displayed on buttons by adding x to va
 }
 function cookieDecoder(cookieName){//decodes cookies and releases the raw cookie minus the start parts like name
     let name = cookieName + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
+  let decodedCookie = decodeURIComponent(document.cookie)
   let ca = decodedCookie.split(';');
-  for(let i = 0; i <ca.length; i++) {
+  for(let i = 0; i < ca.length; i++) {
     let c = ca[i];
     while (c.charAt(0) == ' ') {
       c = c.substring(1);
@@ -32,8 +33,6 @@ function qrgen(input){//genrates qr codes
     console.log(input)
     qrcode.clear()
     qrcode.makeCode(input);
-    document.cookie="vals="+JSON.stringify(input)
-    console.log(document.cookie)
 
     buttonVals = [0, 0, 0, 0, 0, 0, 0]
 }
@@ -50,24 +49,56 @@ function swapPage(){
     window.location.href = "disp.html";
 }
 
-if(cookieDecoder(document.cookie,"vals")==null){
+if(cookieDecoder("vals")==null||cookieDecoder("vals")===""){
     document.cookie="vals={}"
 }
-if(parseFloat(cookieDecoder(document.cookie,"version"))<version){//checks version and resets vals is version isnt correct
+if(parseFloat(cookieDecoder("version"))<version){//checks version and resets vals is version isnt correct
     document.cookie="vals={}"
     document.cookie="pitData={}"
     document.cookie="version="+version
 }
-if(cookieDecoder(document.cookie,"version")==null){
+if(cookieDecoder("version")==null){
     document.cookie="version="+version
 }
 
-let vals = JSON.parse(cookieDecoder(document.cookie,"vals"))
+let vals = JSON.parse(cookieDecoder("vals"))
+qrgen("")
 
-function encrypt(x){
+
+function checkMax(x){
+    for(let i = 0;i<x.length;i++){
+        if(x[i]>maxVals[i]){
+            x[i] = maxVals[i]
+        }
+    }
+}
+function encrypt(x,tn,rn){
     let out =""
+    //checkMax(x)
     for(i = 0;i<x.length;i++){
+        let binLen = 2;
+        switch (i) {
+            case 0:
+                binLen = 4
+                break;
+            case 3:
+                binLen = 3
+                break;
+            case 4:
+                binLen = 3
+                break;
+            case 5:
+                binLen = 1
+                break;
+            case 6:
+                binLen = 1
+                break;
+        }
+        for(let j = 0;j<binLen-x[i].toString(2).length;j++){
+            out+="0"
+        }
         out+=x[i].toString(2)
+        console.log(i)
     }
     return out
 }
@@ -77,12 +108,13 @@ function push(){
     let roundnum = parseInt(round.value)//gets round and team vals
     if(team.value.trim() != ""&&round.value.trim() !=""){//checks to see if they both are filled out
         if(teamnum>0 && roundnum>0){
-            let pushVals = encrypt(buttonVals)
+            pushString += encrypt(buttonVals,teamnum,roundnum)
+            let pushVals = [buttonVals[0],buttonVals[1],buttonVals[2],buttonVals[3],buttonVals[4],buttonVals[5],buttonVals[6]]
     if (vals[teamnum] == undefined) {
         vals[teamnum] = {}
     }
     vals[teamnum][roundnum] = pushVals// makes the spot equal to the vals
-    qrgen()
+    qrgen(pushString)
         }else{
             alert("round and team numbers must not include letters")
         }

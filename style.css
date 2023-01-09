@@ -1,12 +1,12 @@
 .bodya{
   width: 100vw;
-  min-height: 100vh;
+  min-height: 150vh;
   background: linear-gradient(
-    -90deg,
-    #ceab4a 0%,
-    #ceab4a 50%,
+    0deg,
+    #86251c 0%,
     #86251c 50%,
-    #86251c 100%
+    #ceab4a 50%,
+    #ceab4a 100%
   );
   display: grid;
   margin: 0%;
