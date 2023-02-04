@@ -10,4 +10,4 @@ goals:\
 -output as bin in the form of an int \
 -transfer in disp.html from int back to bin back to data \
 -display data\
--transfer data from one system to another \
+-transfer data from one system to another 
