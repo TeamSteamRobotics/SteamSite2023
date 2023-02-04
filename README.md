@@ -1,6 +1,6 @@
 # SteamSite2023
 
-how to open (in dev)__
+how to open (in dev)\
 run "python -m SimpleHTTPServer" in the unzipped repo folder__
 open http://127.0.0.1:8000__
 open main.html__
