@@ -3,7 +3,7 @@
 how to open (in dev)\
 run "python -m SimpleHTTPServer" in the unzipped repo folder\
 open http://127.0.0.1:8000 \
-open main.html\
+open main.html
 
 goals:\
 -both auto and teleop data \
