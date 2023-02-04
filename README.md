@@ -2,7 +2,7 @@
 
 how to open (in dev)\
 run "python -m SimpleHTTPServer" in the unzipped repo folder\
-open http://127.0.0.1:8000\
+open http://127.0.0.1:8000 \
 open main.html\
 
 goals:\
