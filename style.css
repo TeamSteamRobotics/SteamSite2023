@@ -1,17 +1,18 @@
 .bodya{
   width: 100vw;
-  min-height: 150vh;
+  min-height: 100vh;
   background: linear-gradient(
     0deg,
     #86251c 0%,
-    #86251c 50%,
-    #ceab4a 50%,
+    #86251c 70%,
+    #ceab4a 70%,
     #ceab4a 100%
   );
   display: grid;
+  justify-items: right;
   margin: 0%;
-  grid-template-columns: [column0] 50vw [column1] 50% [column2];
-  grid-template-rows: [row0] 5vh [row1] 95%;
+  grid-template-columns: [column0] 100vw [column1];
+  grid-template-rows: [row0] 5vh [row1] 47% [row2] 47%;
   }
   .opBxButton{
     width:25vw;
@@ -32,7 +33,7 @@
     grid-template-rows: [row0] 5vh [row1] 95%;
     }
   .OperationsBox{
-    width: 100%;
+    width: 100vw;
     height:100%;
     grid-column-start: 1;
     grid-column-end: span 2;
@@ -45,15 +46,18 @@
   }
   .SideBoxes{
     display: flex;
-    flex-direction: column;
-    grid-row: row1;
     width: 100%;
-    align-items:center;
+    height: 100%;
   }
   .ButtonBoxes{
+    width: 44vw;
+    height: 22vw;
+    margin: auto;
+    margin-left: 10%;
+    margin-top: 10vh;
     display: grid;
-    width: 100%;
-    grid-template-rows:[row0] 1vh [row1] 13vh [row2] 13vh [row3] 13vh [row4] ;
+    grid-template-rows:[row0] 11vh [row1] 11vh [row2] 11vh [row3] 11vh [row4] ;
+    grid-template-columns:[col0] 11vh [col1] 11vh [col2] 11vh [col3];
     align-items:flex-start;
   }
   .Boxes{

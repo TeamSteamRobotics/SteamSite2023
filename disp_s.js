@@ -10,13 +10,30 @@ let textBoxes = [document.getElementById("t1"),document.getElementById("t2"),doc
 let version = 1.2
 
 function decrypt(x){
-  output = "";
-  for (var i = 0; i < x.length; i++) {
-      output += x[i].charCodeAt(0).toString(2) + " ";
+  let output = [];
+  let bin = []
+  let split = []
+  for(i = 0;i<x.length;i++){
+    let hold = parseInt(x[i]).toString(2)
+    while(hold.length<8){
+      hold = "0"+hold
+    }
+    bin[i] = hold
   }
-  console.log(output)
+  split.push(parseInt(bin[0].substring(0,6),2))//round num
+  split.push(parseInt(bin[0].substring(6,8),2))//seesaw a
+  split.push(parseInt(bin[1].substring(0,2),2))//seesaw b
+  split.push(parseInt(bin[1].substring(2,5),2))//cone a
+  split.push(parseInt(bin[1].substring(5,8),2))//cone b
+  split.push(parseInt(bin[2].substring(0,2),2))//cube a
+  split.push(parseInt(bin[2].substring(2,4),2))//cube b
+  split.push(parseInt(bin[2].substring(4,8),2))//bottom
+
+
+  console.log(split)
   return output;
 }
+
 function onScanSuccess(decodedText, decodedResult) {//on succes
   // Handle on success condition with the decoded text or result.
   if(last!=decodedText){
@@ -49,19 +66,20 @@ return null;
 function qrToJson(input) {//qr in json out
   let tempa = input.split(",")//splits out diferent teams
   for (let i = 0; i < tempa.length; i++) {
-    let tempb = tempa[i].split(":")//splits team and data
+    let tempb = tempa[i].split(".")//splits team and data
 
     if (vals[tempb[0]] == undefined) {//makes sure team is on vals
       vals[tempb[0]] = {}
     }
-
-    let data = tempb[1].split(".")
+    tempb.shift()
+    let splitVals = tempb
+    let data = decrypt(splitVals)
     for (let j = 0; j < data.length; j += 7) {
-      let nv = [data[j + 1], data[j + 2], data[j + 3], data[j + 4], data[j + 5], data[j + 6]]
+      let nv = [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9]]
       vals[tempb[0]][data[j]] = nv
     }
   }
-  updateAllList()
+  //updateAllList()
   qrgen()
 }
 function qrgen(){//generates qr code
@@ -414,5 +432,5 @@ const allconfig = {
   }
 };
 const allchart = new Chart(document.getElementById('allteams'),allconfig);
-
-updateAllList()
+qrToJson("0001.9.238.178")
+//updateAllList()

@@ -12,7 +12,29 @@
     <button class="opBxButton" onclick="push()">Push</button>
     <button class="opBxButton" onclick="clear()">clear</button>
   </div>
-  <div id="qr" style="width: 200%;height: 100vw;padding-left: 5%;margin-top: 50%;"></div>
+  <div class="SideBoxes" >
+    <div class="ButtonBoxes">
+      <button class="InputButtonR" onclick="buttonVal(this,0,1)">0</button>
+      <button class="InputButtonR" onclick="buttonVal(this,1,1)">0</button>
+      <button class="InputButtonR" onclick="buttonVal(this,2,1)" style="grid-row: 2;grid-column: 1;">0</button>
+      <button class="InputButtonR" onclick="buttonVal(this,3,1)" style="grid-row: 2;grid-column: 2;">0</button>
+      <button class="InputButtonR" onclick="buttonVal(this,4,1)" style="margin-left: 11vw;grid-row: 3;grid-column: 1;">0</button>
+      <button class="InputButtonR" onclick="buttonVal(this,5,1)" style="margin-left: 11vw;"></button>
+      <button class="InputButtonR" onclick="buttonVal(this,6,1)" style="margin-left: 11vw;"></button>
+    </div>
+  </div>
+  <div class="SideBoxes" style="grid-row: row2;">
+    <div class="ButtonBoxes">
+      <button class="InputButtonY" onclick="buttonVal(this,4,1)">0</button>
+      <button class="InputButtonY" onclick="buttonVal(this,4,1)">0</button>
+      <button class="InputButtonY" onclick="buttonVal(this,4,1)"style="grid-row: 2;grid-column: 1;">0</button>
+      <button class="InputButtonY" onclick="buttonVal(this,4,1)"style="grid-row: 2;grid-column: 2;">0</button>
+      <button class="InputButtonY" onclick="buttonVal(this,4,1)"style="margin-left: 11vw;grid-row: 3;grid-column: 1;">0</button>
+      <button class="InputButtonY" onclick="buttonVal(this,4,1)"style="margin-left: 11vw;"></button>
+      <button class="InputButtonY" onclick="buttonVal(this,4,1)"style="margin-left: 11vw;"></button>
+    </div>
+  </div>
+  <div id="qr" style="width: 200%;height: 100vw;padding-left: 5%;margin-top: 50%;grid-row: row3;"></div>
   <script type="text/javascript" src="qrcode.js"></script>
   <script src="main_s.js"></script>
   </body>

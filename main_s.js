@@ -5,14 +5,15 @@ let version = 1.2
 
 let pushString = ""
 
-let buttonVals = [0,0,1,1,1,5,6,2,3,2]
-let maxVals = [63,1,1,1,1,6,6,3,3,9]
+let buttonVals = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]//ps 1234, cones 1 2btm 3 4tp, cubes 1 2btm 3 4tp, bottom 1 2
+let maxVals = [63,1,1,1,1,6,6,3,3,9,6,6,3,3,9]
 let checkedBoxes = 0;
 let mfv = 0
 
-function buttonVal(i, x) {//changes values displayed on buttons by adding x to value i
-    buttonVals[i] += x
-    buttons[i].innerText = buttonVals[i]
+function buttonVal(i, j, x) {//changes values displayed on buttons by adding x to value i
+    buttonVals[j] += x
+    i.innerText = buttonVals[j]
+    console.log(buttonVals[j])
 }
 function cookieDecoder(cookieName) {//decodes cookies and releases the raw cookie minus the start parts like name
     let name = cookieName + "=";
@@ -33,8 +34,6 @@ function qrgen(input) {//genrates qr codes
     console.log(input)
     qrcode.clear()
     qrcode.makeCode(input);
-
-    //buttonVals = [0, 0, 0, 0, 0, 0, 0]
 }
 
 let qrcode = new QRCode(document.getElementById("qr"), {
@@ -66,7 +65,7 @@ qrgen("")
 
 
 function binToText(x) {
-    return String.fromCharCode(parseInt(x, 2))
+    return parseInt(x, 2)+" "+String.fromCharCode(parseInt(x, 2))+" "
 }
 function checkMax(x) {
     for (let i = 0; i < x.length; i++) {
@@ -77,7 +76,7 @@ function checkMax(x) {
 }
 function encrypt(x, rn) {
     x[0] = rn;
-    let outBin = ["", "", ""]
+    let outBin = ["", "", "", ""]
     let outStr = ""
     checkMax(x)
     let outNum = 0;
@@ -87,8 +86,9 @@ function encrypt(x, rn) {
             case 0:
                 binLen = 6
                 break;
-            case 1||2||4:
+            case 1:
                 binLen = 1
+                break;
             case 3:
                 outNum = 1
                 binLen = 1
@@ -96,14 +96,20 @@ function encrypt(x, rn) {
             case 5:
                 binLen = 3
                 break;
-            case 6:
-                binLen = 3
-                break;
             case 7:
                 outNum = 2
                 break;
             case 9:
+                binLen = 2
+                break;
+            case 10:
+                outNum = 3
+                break;
+            case 12:
                 binLen = 4
+                break
+            case 13:
+                outNum = 3
                 break;
         }
         for (let j = 0; j < binLen - x[i].toString(2).length; j++) {
@@ -111,20 +117,32 @@ function encrypt(x, rn) {
         }
         outBin[outNum] += x[i].toString(2)
     }
-    outStr += binToText(outBin[0])
-    outStr += binToText(outBin[1])
-    outStr+=binToText(outBin[2])
+    outStr += "."+parseInt(outBin[0],2)
+    outStr += "."+parseInt(outBin[1],2)
+    outStr += "."+parseInt(outBin[2],2)
     console.log(outBin + " " + outStr)
     return outStr;
 }
-
+function resetPage(){
+    team.value = ""
+    round.value = ""
+    buttonVals = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+}
 function push() {
     let teamnum = parseInt(team.value)
     let roundnum = parseInt(round.value)//gets round and team vals
     if (team.value.trim() != "" && round.value.trim() != "") {//checks to see if they both are filled out
+        let teamStr = ""+teamnum
+        while(teamStr.length<4){
+            teamStr="0"+teamStr
+        }
+        console.log(teamStr)
         if (teamnum > 0 && roundnum > 0) {
-            pushString += teamnum + "." + roundnum + encrypt(buttonVals, roundnum)
-            let pushVals = [buttonVals[0], buttonVals[1], buttonVals[2], buttonVals[3], buttonVals[4], buttonVals[5], buttonVals[6], buttonVals[7], buttonVals[8], buttonVals[9]]
+            if(pushString.length>1){
+                pushString+=","
+            }
+            pushString += teamStr + encrypt(buttonVals, roundnum)
+            let pushVals = [buttonVals[0], buttonVals[1], buttonVals[2], buttonVals[3], buttonVals[4], buttonVals[5], buttonVals[6], buttonVals[7], buttonVals[8], buttonVals[9],buttonVals[10], buttonVals[11], buttonVals[12], buttonVals[13], buttonVals[14]]
             if (vals[teamnum] == undefined) {
                 vals[teamnum] = {}
             }
@@ -137,6 +155,7 @@ function push() {
     } else {
         alert("add a team number and round number before pushing")
     }
+    resetPage();    
 }
 function clear() {//clears local cache, not cookies
     vals = {}
