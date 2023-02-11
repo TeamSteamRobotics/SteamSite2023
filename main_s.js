@@ -10,10 +10,18 @@ let maxVals = [63,1,1,1,1,6,6,3,3,9,6,6,3,3,9]
 let checkedBoxes = 0;
 let mfv = 0
 
+
 function buttonVal(i, j, x) {//changes values displayed on buttons by adding x to value i
     buttonVals[j] += x
     i.innerText = buttonVals[j]
-    console.log(buttonVals[j])
+    //console.log(buttonVals[j])
+}
+function checkVals(i,j){
+    if(i.checked){
+        buttonVals[j] = 1
+    }else{
+        buttonVals[j] = 0
+    }
 }
 function cookieDecoder(cookieName) {//decodes cookies and releases the raw cookie minus the start parts like name
     let name = cookieName + "=";
@@ -38,12 +46,11 @@ function qrgen(input) {//genrates qr codes
 
 let qrcode = new QRCode(document.getElementById("qr"), {
     text: "",
-    width: document.body.clientWidth * .95,
-    height: document.body.clientWidth * .95,
-    padding: 0,
+    width: document.body.clientWidth*.94,
+    height: document.body.clientWidth*.94,
+    padding: 5,
     correctLevel: QRCode.CorrectLevel.H
 });
-
 function swapPage() {
     window.location.href = "disp.html";
 }
@@ -75,13 +82,15 @@ function checkMax(x) {
     }
 }
 function encrypt(x, rn) {
-    x[0] = rn;
-    let outBin = ["", "", "", ""]
+    console.log(x)
+    x.unshift(rn);
+    console.log(x)
+    let outBin = ["", "", "", "",'']
     let outStr = ""
     checkMax(x)
     let outNum = 0;
+    let binLen = 0;
     for (i = 0; i < x.length; i++) {
-        let binLen = 2;
         switch (i) {
             case 0:
                 binLen = 6
@@ -103,13 +112,12 @@ function encrypt(x, rn) {
                 binLen = 2
                 break;
             case 10:
+                binLen = 2
                 outNum = 3
                 break;
-            case 12:
-                binLen = 4
-                break
             case 13:
-                outNum = 3
+                binLen = 4
+                outNum = 4
                 break;
         }
         for (let j = 0; j < binLen - x[i].toString(2).length; j++) {
@@ -120,13 +128,26 @@ function encrypt(x, rn) {
     outStr += "."+parseInt(outBin[0],2)
     outStr += "."+parseInt(outBin[1],2)
     outStr += "."+parseInt(outBin[2],2)
+    outStr += "."+parseInt(outBin[3],2)
     console.log(outBin + " " + outStr)
     return outStr;
 }
 function resetPage(){
     team.value = ""
     round.value = ""
-    buttonVals = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    buttonVals = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    var buttons = document.getElementsByTagName('button');
+    for (let i = 0; i < buttons.length; i++) {
+        let button = buttons[i];
+        if(button.className == "InputButtonR" || button.className == "InputButtonY"){
+            button.innerText = "0";
+        }
+    }
+    var checks = document.querySelectorAll('input[type=checkbox]');
+    for (let i = 0; i < checks.length; i++) {
+        let indi = checks[i];
+        indi.checked = false
+    }
 }
 function push() {
     let teamnum = parseInt(team.value)

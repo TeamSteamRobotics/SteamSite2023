@@ -67,13 +67,14 @@
     grid-template-rows:[row0] 25vw [row1] 25vw [row2] 25vw [row3] 25vw [row4] ;
     align-items:flex-start;
   }
+  /*
   input[type="checkbox"] {
-    /* Add if not using autoprefixer */
+    /* Add if not using autoprefixer 
     -webkit-appearance: none;
     appearance: none;
-    /* For iOS < 15 to remove gradient background */
+    /* For iOS < 15 to remove gradient background 
     background-color: #86251c;
-    /* Not removed via appearance */
+    /* Not removed via appearance 
     margin: 0;
     float: left;
     border: none;
@@ -88,8 +89,9 @@
   }
   input[type="checkbox"]:checked {
     background-color: #b98578;
-  }
+  }*/
   .InputButtonR{
+    appearance: none;
     border: none;
     border-radius: 25%;
     color: #ceab4a;
@@ -103,10 +105,17 @@
   .InputButtonR:active{
     background-color: #b98578;
   }
+  .InputButtonR:checked{
+    background-color: #b98578;
+  }
   .InputButtonY:active{
     background-color: #e9d8af;
   }
+  .InputButtonY:checked{
+    background-color: #e9d8af;
+  }
   .InputButtonY{
+    appearance: none;
     border: none;
     border-radius: 25%;
     color: #86251c;
