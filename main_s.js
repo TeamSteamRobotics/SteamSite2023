@@ -5,9 +5,8 @@ let version = 1.2
 
 let pushString = ""
 
-let buttonVals = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]//ps 1234, cones 1 2btm 3 4tp, cubes 1 2btm 3 4tp, bottom 1 2
-let maxVals = [63,1,1,1,1,6,6,3,3,9,6,6,3,3,9]
-let checkedBoxes = 0;
+let buttonVals = [0,0,0,0,0,0,0,0,0,0]//a seesaw 1 2, a scr, all, cn 12, cb 12, seesaw 1 2
+let maxVals = [63,1,1,15,9,6,6,3,3,1,1]
 let mfv = 0
 
 
@@ -21,6 +20,20 @@ function checkVals(i,j){
         buttonVals[j] = 1
     }else{
         buttonVals[j] = 0
+    }
+    if(j==0){
+        if(buttonVals[j] == 0){
+            document.getElementById("saw1").src="saw not level.png";
+        }else{
+            document.getElementById("saw1").src="saw level.png";
+        }
+    }
+    if(j==8){
+        if(buttonVals[j] == 0){
+            document.getElementById("saw2").src="saw not level.png";
+        }else{
+            document.getElementById("saw2").src="saw level.png";
+        }
     }
 }
 function cookieDecoder(cookieName) {//decodes cookies and releases the raw cookie minus the start parts like name
@@ -85,7 +98,7 @@ function encrypt(x, rn) {
     console.log(x)
     x.unshift(rn);
     console.log(x)
-    let outBin = ["", "", "", "",'']
+    let outBin = ["", "", "", ""]
     let outStr = ""
     checkMax(x)
     let outNum = 0;
@@ -100,25 +113,20 @@ function encrypt(x, rn) {
                 break;
             case 3:
                 outNum = 1
-                binLen = 1
+                binLen = 4
                 break;
             case 5:
+                outNum = 2
                 binLen = 3
                 break;
             case 7:
-                outNum = 2
-                break;
-            case 9:
                 binLen = 2
                 break;
-            case 10:
-                binLen = 2
+            case 8:
                 outNum = 3
                 break;
-            case 13:
-                binLen = 4
-                outNum = 4
-                break;
+            case 9:
+                binLen = 1
         }
         for (let j = 0; j < binLen - x[i].toString(2).length; j++) {
             outBin[outNum] += "0"
@@ -163,7 +171,7 @@ function push() {
                 pushString+=","
             }
             pushString += teamStr + encrypt(buttonVals, roundnum)
-            let pushVals = [buttonVals[0], buttonVals[1], buttonVals[2], buttonVals[3], buttonVals[4], buttonVals[5], buttonVals[6], buttonVals[7], buttonVals[8], buttonVals[9],buttonVals[10], buttonVals[11], buttonVals[12], buttonVals[13], buttonVals[14]]
+            let pushVals = [buttonVals[0], buttonVals[1], buttonVals[2], buttonVals[3], buttonVals[4], buttonVals[5], buttonVals[6], buttonVals[7], buttonVals[8], buttonVals[9]]
             if (vals[teamnum] == undefined) {
                 vals[teamnum] = {}
             }

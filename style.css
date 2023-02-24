@@ -53,10 +53,23 @@
     width: 44vw;
     height: 22vw;
     margin: auto;
-    margin-left: 10%;
-    margin-top: 10vh;
+    margin-left: 10%; 
+    margin-top: 0vh;
+    margin-bottom: auto;
     display: grid;
     grid-template-rows:[row0] 11vh [row1] 11vh [row2] 11vh [row3] 11vh [row4] ;
+    grid-template-columns:[col0] 11vh [col1] 11vh [col2] 11vh [col3];
+    align-items:flex-start;
+  }
+  .AButtonBoxes{
+    width: 33vh;
+    height: 22vh;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15vh;
+    margin-bottom: auto;
+    display: grid;
+    grid-template-rows:[row0] 11vh [row1] 11vh [row2];
     grid-template-columns:[col0] 11vh [col1] 11vh [col2] 11vh [col3];
     align-items:flex-start;
   }

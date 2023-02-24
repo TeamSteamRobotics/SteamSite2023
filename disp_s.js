@@ -20,16 +20,18 @@ function decrypt(x){
     }
     bin[i] = hold
   }
+  console.log(bin)
   split.push(parseInt(bin[0].substring(0,6),2))//round num
-  split.push(parseInt(bin[0].substring(6,8),2))//seesaw a
-  split.push(parseInt(bin[1].substring(0,2),2))//seesaw b
-  split.push(parseInt(bin[1].substring(2,5),2))//cone a
-  split.push(parseInt(bin[1].substring(5,8),2))//cone b
-  split.push(parseInt(bin[2].substring(0,2),2))//cube a
-  split.push(parseInt(bin[2].substring(2,4),2))//cube b
-  split.push(parseInt(bin[2].substring(4,8),2))//bottom
-
-
+  split.push(parseInt(bin[0].substring(6,7),2))//seesaw a
+  split.push(parseInt(bin[0].substring(7,8),2))//seesaw a
+  split.push(parseInt(bin[1].substring(0,4),2))//auto all
+  split.push(parseInt(bin[1].substring(4,8),2))//tele bottom
+  split.push(parseInt(bin[2].substring(0,3),2))//cone t
+  split.push(parseInt(bin[2].substring(3,6),2))//cone b
+  split.push(parseInt(bin[2].substring(6,8),2))//cube t
+  split.push(parseInt(bin[3].substring(4,6),2))//cube b
+  split.push(parseInt(bin[3].substring(6,7),2))//seesaw t
+  split.push(parseInt(bin[3].substring(7,8),2))
   console.log(split)
   return output;
 }
@@ -75,7 +77,7 @@ function qrToJson(input) {//qr in json out
     let splitVals = tempb
     let data = decrypt(splitVals)
     for (let j = 0; j < data.length; j += 7) {
-      let nv = [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9]]
+      let nv = [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9]]//a seesaw 1 2, a scr, all, cn 12, cb 12, seesaw 1 2
       vals[tempb[0]][data[j]] = nv
     }
   }
@@ -432,5 +434,4 @@ const allconfig = {
   }
 };
 const allchart = new Chart(document.getElementById('allteams'),allconfig);
-qrToJson("0001.9.238.178")
-//updateAllList()
+qrToJson("0001.11.33.101.4")
