@@ -7,7 +7,9 @@ let teamnum = 0
 let size;
 let textBoxes = [document.getElementById("t1"),document.getElementById("t2"),document.getElementById("t3"),document.getElementById("t4"),document.getElementById("t5")]
 
-let version = 1.2
+let version = 2
+
+let maxVals = [63,1,1,15,9,6,6,3,3,1,1]
 
 function decrypt(x){
   let output = [];
@@ -20,7 +22,7 @@ function decrypt(x){
     }
     bin[i] = hold
   }
-  console.log(bin)
+  //console.log(bin)
   split.push(parseInt(bin[0].substring(0,6),2))//round num
   split.push(parseInt(bin[0].substring(6,7),2))//seesaw a
   split.push(parseInt(bin[0].substring(7,8),2))//seesaw a
@@ -33,9 +35,64 @@ function decrypt(x){
   split.push(parseInt(bin[3].substring(6,7),2))//seesaw t
   split.push(parseInt(bin[3].substring(7,8),2))
   console.log(split)
-  return output;
+  return split;
 }
-
+function encrypt(x, rn) {
+  x.unshift(parseInt(rn))
+  console.log(x)
+  let outBin = ["", "", "", ""]
+  let outStr = ""
+  checkMax(x)
+  let outNum = 0;
+  let binLen = 0;
+  for (i = 0; i < x.length; i++) {
+      switch (i) {
+          case 0:
+              binLen = 6
+              break;
+          case 1:
+              binLen = 1
+              break;
+          case 3:
+              outNum = 1
+              binLen = 4
+              break;
+          case 5:
+              outNum = 2
+              binLen = 3
+              break;
+          case 7:
+              binLen = 2
+              break;
+          case 8:
+              outNum = 3
+              break;
+          case 9:
+              binLen = 1
+      }
+      //console.log(outBin)
+      for (let j = 0; j < binLen - x[i].toString(2).length; j++) {
+          outBin[outNum] += "0"
+      }
+      outBin[outNum] += x[i].toString(2)
+  }
+  outStr += "."+parseInt(outBin[0],2)
+  outStr += "."+parseInt(outBin[1],2)
+  outStr += "."+parseInt(outBin[2],2)
+  outStr += "."+parseInt(outBin[3],2)
+  console.log(outBin + " " + outStr)
+  x.shift()
+  console.log(x)
+  return outStr;
+  
+}
+function checkMax(x) {
+  for (let i = 0; i < x.length; i++) {
+      if (x[i] > maxVals[i]) {
+          x[i] = maxVals[i]
+      }
+  }
+}
 function onScanSuccess(decodedText, decodedResult) {//on succes
   // Handle on success condition with the decoded text or result.
   if(last!=decodedText){
@@ -69,47 +126,44 @@ function qrToJson(input) {//qr in json out
   let tempa = input.split(",")//splits out diferent teams
   for (let i = 0; i < tempa.length; i++) {
     let tempb = tempa[i].split(".")//splits team and data
-
-    if (vals[tempb[0]] == undefined) {//makes sure team is on vals
-      vals[tempb[0]] = {}
+    let teamnumloc = tempb[0]
+    if (vals[teamnumloc] == undefined) {//makes sure team is on vals
+      vals[teamnumloc] = {}
     }
     tempb.shift()
     let splitVals = tempb
     let data = decrypt(splitVals)
-    for (let j = 0; j < data.length; j += 7) {
-      let nv = [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9]]//a seesaw 1 2, a scr, all, cn 12, cb 12, seesaw 1 2
-      vals[tempb[0]][data[j]] = nv
+    for (let j = 0; j < data.length; j += 11) {
+      let nv = [data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]]//a seesaw 1 2, a scr, all, cn 12, cb 12, seesaw 1 2
+      vals[teamnumloc][data[0]] = nv
+      //console.log(nv)
     }
   }
-  //updateAllList()
-  qrgen()
+  document.cookie = "vals="+JSON.stringify(vals)  
+  updateAllList()
+  //updateVals()
+  //qrgen()
 }
 function qrgen(){//generates qr code
   qrOut = ""
   for(let i = 0;i<Object.keys(vals).length;i++){//finds all the teams
       let iVal = vals[Object.keys(vals)[i]]
-      qrOut+=Object.keys(vals)[i]+":"//adds them to a certain spot
-      for(let j= 0;j<Object.keys(iVal).length;j++){//finds all the rounds
+      if(Object.keys(vals)[i] == teamnum){
+        for(let j= 0;j<Object.keys(iVal).length;j++){//finds all the rounds
+          if(j>0){
+            qrOut+=","
+          }
           let jVal = iVal[Object.keys(iVal)[j]]
-          qrOut+=Object.keys(iVal)[j]+"."//adds them to the list
-          for(let l = 0;l<6;l++){//adds all the vals
-             qrOut+=jVal[l]
-             if(l!=5){
-              qrOut+="."
-             }
-          }
-          if(j!=Object.keys(iVal).length-1){
-            qrOut+="."  
-          }
-      }
-      if(i!=Object.keys(vals).length-1){
-          qrOut+=","
+          console.log(Object.keys(iVal)[j])
+          qrOut+=Object.keys(vals)[i]+encrypt(jVal,Object.keys(iVal)[j])//adds them to the list
+        }
       }
   }
- // console.log(qrOut)
+ console.log(qrOut)
  document.cookie = "vals="+JSON.stringify(vals)
   qrcode.clear()
   qrcode.makeCode(qrOut)
+  
 }
 function pitHandler(index){//handles changes in pit scouting data
   teamnum = parseInt(team.value)
@@ -138,22 +192,26 @@ function scandler(x){//scan handler
   }
 }
 function updateAllList() {//updates all teams list
-  allchart.reset();
+  //allchart.reset();
+  console.log("balls")
   let ls = []
   for (i = 0; i < Object.keys(vals).length; i++) {
-    let teamnum = parseInt(Object.keys(vals)[i])
-    let nv = [teamnum, 0, 0, 0, 0]//new values
-    let totalRound = Object.keys(vals[teamnum]).length
-    for (let j = 0; j < Object.keys(vals[teamnum]).length; j++) {
-      let key = vals[teamnum][Object.keys(vals[teamnum])[j]]
-      nv[1] += parseInt(key[2]) + parseInt(key[3])
-      nv[2] += parseInt(key[0]) + parseInt(key[1])
-      nv[3] += parseInt(key[4])
+    let nv = [Object.keys(vals)[i], 0, 0, 0, 0, 0, 0]//new values
+    let teamtemp = Object.keys(vals)[i];
+    //console.log(i)
+    let totalRound = Object.keys(vals[teamtemp]).length
+    for (let j = 0; j < totalRound; j++) {
+      let key = vals[teamtemp][Object.keys(vals[teamtemp])[j]]
+      nv[1] += parseInt(key[4]) + parseInt(key[5])
+      nv[2] += parseInt(key[6]) + parseInt(key[7])
+      nv[4] += parseInt(key[1]) + parseInt(key[9])
+      nv[5] += parseInt(key[0]) + parseInt(key[8])
+      nv[3] += parseInt(key[2])
     }
     for (let t = 1; t < nv.length; t++) {//divides the newvalues by total rounds
       nv[t] = nv[t] / totalRound
     }
-    nv[4] = nv[1] + nv[2] + nv[3]
+    nv[6] = nv[1] + nv[2] + nv[3] + nv[4] + nv[5]
     ls.push(nv)
     allchart.data.datasets.forEach((dataset) => {
       dataset.data.pop();
@@ -161,22 +219,29 @@ function updateAllList() {//updates all teams list
     allchart.data.labels.pop();
   }
   allchart.update();
-  ls.sort((a, b) => { if (a[4] > b[4]) {return 1} else if (a[4] < b[4]) { return -1 } return 0 })
-  //console.log(ls)
+  console.log(ls)
+  ls.sort((a, b) => { if (a[6] > b[6]) {return 1} else if (a[6] < b[6]) { return -1 } return 0 })
+  console.log(ls)
 
   for(i = 0;i<ls.length;i++){
     let cval = ls.length-i-1
     allchart.data.datasets.forEach((dataset) => {//this adds the values to the line graph
       switch (dataset.label) {
-        case "teleop":
+        case "coneTotal":
           dataset.data.push(ls[cval][1])
           break;
-        case "auto":
+        case "cubeTotal":
           dataset.data.push(ls[cval][2])
           break;
-        case "climb":
+        case "autoPoints":
           dataset.data.push(ls[cval][3])
           break;
+        case "docked":
+          dataset.data.push(ls[cval][4])
+          break;
+        case "engaged":
+            dataset.data.push(ls[cval][5])
+            break;
         default:
           break;
       }
@@ -194,35 +259,38 @@ function updateVals() {//updates all the garpghs
       dataset.data.pop();
     });
   }
-  let nv = [0, 0, 0, 0, 0, 0, 0]//new values
+  let nv = [0, 0, 0, 0, 0, 0, 0, 0]//new values
+  //console.log(Object.keys(vals[teamnum]).length)
   let totalRound = Object.keys(vals[teamnum]).length
   for (let j = 0; j < Object.keys(vals[teamnum]).length; j++) {
     let key = vals[teamnum][Object.keys(vals[teamnum])[j]]
-    nv[5] += parseInt(key[2]) + parseInt(key[3])
-    nv[4] += parseInt(key[0]) + parseInt(key[1])
-    nv[3] += parseInt(key[3])
-    nv[2] += parseInt(key[2])
-    nv[1] += parseInt(key[1])
-    nv[0] += parseInt(key[0])
-    nv[6] += parseInt(key[4])
-
+    nv[0] += parseInt(key[3])
+    nv[1] += parseInt(key[2])
+    nv[2] += parseInt(key[4])
+    nv[3] += parseInt(key[5])
+    nv[4] += parseInt(key[7])
+    nv[5] += parseInt(key[6])
+    nv[6] += parseInt(key[1])+parseInt(key[8])
+    nv[7] += parseInt(key[0])+parseInt(key[7])
+    //console.log(nv)
     line.data.datasets.forEach((dataset) => {//this adds the values to the line graph
       switch (dataset.label) {
-        case "teleop":
-          dataset.data.push(parseInt(key[2]) + parseInt(key[3]))
+        case "coneTotal":
+          dataset.data.push(parseInt(key[4]) + parseInt(key[5]))
           break;
-        case "auto":
-          dataset.data.push(parseInt(key[0]) + parseInt(key[1]))
+        case "cubeTotal":
+          dataset.data.push(parseInt(key[6]) + parseInt(key[7]))
           break;
-        case "climb":
-          dataset.data.push(parseInt(key[4]))
+        case "docked":
+          dataset.data.push(parseInt(key[1])+ parseInt(key[9]))
           break;
+        case "engaged":
+            dataset.data.push(parseInt(key[0])+ parseInt(key[8]))
+            break;
         default:
           break;
       }
     });
-    
-    
   }
   for (let t = 0; t < nv.length; t++) {//divides the newvalues by total rounds
     nv[t] = nv[t] / totalRound
@@ -274,8 +342,7 @@ if(cookiecoder(document.cookie,"vals")==null){//adds vals to cookie
 if(cookiecoder(document.cookie,"pitData")==null){//adds pit data to cookies
   document.cookie="pitData={}"
 }
-let vals = JSON.parse(cookiecoder(document.cookie,"vals"))//sets vals var to the vals in cookies
-
+let vals = JSON.parse(cookiecoder(document.cookie,"vals"))//sets vals var to the vals in cookies  
 if(vals!={}){//if there is stuff to generate it will
   qrgen()
 }
@@ -303,28 +370,29 @@ cl.addEventListener("click", () => {//clears crap
   console.log(vals)
 })
 team.addEventListener("blur", () => {//when you type in a team this runs
-  teamnum = parseInt(team.value)
+  teamnum = (team.value)
   if (vals[teamnum] != undefined) {//makes sure team is on vals
     updateVals()
   }
+  qrgen()
+  updateAllList()
   updatePit()
 })
 
 const radialdata = {//data for radial
   labels: [
+    'Bottom',
+    'AutoAll',
     'ConeUp',
     'ConeDown',
-    'ConeTotal',
-    'bottomTotal',
-    'Cubetotal',
     'CubeDown',
     'CubeUp',
-    'dockAver',
-    'LevelAver'
+    'DockAver',
+    'EngAver'
   ],
   datasets: [{
     label: 'Average Scores',
-    data: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    data: [1, 2, 3, 4, 5, 6, 7, 8],
     fill: true,
     backgroundColor: 'rgba(255, 99, 132, 0.2)',
     borderColor: 'rgb(255, 99, 132)',
@@ -337,10 +405,12 @@ const radialdata = {//data for radial
 const radialconfig = {//config for radial
   type: 'radar',
   data: radialdata,
-  options: {
+  options: {  
     responsive: false,
     scales: {
       r: {
+        suggestedMin: 0,
+        suggestedMax: 10,
         pointLabels: {
           font: {
             size: 25
@@ -367,6 +437,11 @@ const linedata = {
     label: 'docked',
     data: [1, 2, 3, 8, 5, 6],
     borderColor: "rgb(0, 0, 255)",
+  },
+  {
+    label: 'engaged',
+    data: [1, 2, 3, 8, 5, 6],
+    borderColor: "rgb(255, 0, 255)",
   }],
 };
 const lineconfig = {
@@ -404,10 +479,20 @@ const alldata = {
       backgroundColor: "rgb(0, 255, 0)",
     },
     {
+      label: 'autoPoints',
+      data: [],
+      backgroundColor: "rgb(225, 225, 0)",
+    },
+    {
       label: 'docked',
       data: [],
       backgroundColor: "rgb(0, 0, 255)",
     },
+    {
+      label: 'engaged',
+      data: [],
+      backgroundColor: "rgb(0, 225, 255)",
+    }
   ]
 };
 const allconfig = {
@@ -434,4 +519,4 @@ const allconfig = {
   }
 };
 const allchart = new Chart(document.getElementById('allteams'),allconfig);
-qrToJson("0001.11.33.101.4")
+//qrToJson("0001.11.33.101.4")

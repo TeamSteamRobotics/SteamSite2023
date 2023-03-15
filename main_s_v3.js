@@ -1,7 +1,7 @@
 let round = document.getElementById("round")
 let team = document.getElementById("teamnum")
 //let mf = document.getElementById("mf");//major failure button
-let version = 1.2
+let version = 2.0
 
 let pushString = ""
 
@@ -21,6 +21,15 @@ function checkVals(i,j){
     }else{
         buttonVals[j] = 0
     }
+    if(j==0 && buttonVals[1]== 0 && buttonVals[0] == 1){
+        document.getElementById("ch1").checked = true
+        buttonVals[1]= 1
+    }
+    if(j==8 && buttonVals[9]== 0 && buttonVals[8] == 1){
+        document.getElementById("ch2").checked = true
+        buttonVals[9]= 1
+    }
+    
     if(j==0){
         if(buttonVals[j] == 0){
             document.getElementById("saw1").src="saw not level.png";
@@ -52,15 +61,20 @@ function cookieDecoder(cookieName) {//decodes cookies and releases the raw cooki
     return null;
 }
 function qrgen(input) {//genrates qr codes
-    console.log(input)
+    console.log(input)  
     qrcode.clear()
     qrcode.makeCode(input);
 }
-
+let qr
+if(document.body.clientHeight<document.body.clientWidth){
+    qr = document.body.clientHeight*.94
+}else{
+    qr = document.body.clientWidth*.94
+}
 let qrcode = new QRCode(document.getElementById("qr"), {
     text: "",
-    width: document.body.clientWidth*.94,
-    height: document.body.clientWidth*.94,
+    width: qr,
+    height: qr,
     padding: 5,
     correctLevel: QRCode.CorrectLevel.H
 });
@@ -79,9 +93,14 @@ if (parseFloat(cookieDecoder("version")) < version) {//checks version and resets
 if (cookieDecoder("version") == null) {
     document.cookie = "version=" + version
 }
-
+if (cookieDecoder("pushString") == null) {
+    document.cookie = "pushString="+""
+}else if(cookieDecoder("pushString") != ""){
+    pushString = cookieDecoder("pushString")
+}
 let vals = JSON.parse(cookieDecoder("vals"))
-qrgen("")
+
+qrgen(pushString)
 
 
 function binToText(x) {
@@ -143,7 +162,7 @@ function encrypt(x, rn) {
 function resetPage(){
     team.value = ""
     round.value = ""
-    buttonVals = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    buttonVals = [0,0,0,0,0,0,0,0,0,0]
     var buttons = document.getElementsByTagName('button');
     for (let i = 0; i < buttons.length; i++) {
         let button = buttons[i];
@@ -162,9 +181,6 @@ function push() {
     let roundnum = parseInt(round.value)//gets round and team vals
     if (team.value.trim() != "" && round.value.trim() != "") {//checks to see if they both are filled out
         let teamStr = ""+teamnum
-        while(teamStr.length<4){
-            teamStr="0"+teamStr
-        }
         console.log(teamStr)
         if (teamnum > 0 && roundnum > 0) {
             if(pushString.length>1){
@@ -176,18 +192,25 @@ function push() {
                 vals[teamnum] = {}
             }
             vals[teamnum][roundnum] = pushVals// makes the spot equal to the vals
+            document.cookie = "vals="+JSON.stringify(vals)
+            document.cookie = "pushString="+pushString
             qrgen(pushString)
+            resetPage(); 
         } else {
             alert("round and team numbers must not include letters")
         }
 
     } else {
         alert("add a team number and round number before pushing")
-    }
-    resetPage();    
+    }  
 }
-function clear() {//clears local cache, not cookies
-    vals = {}
+function Clear() {//clears local cache, not cookies
+    const response = confirm("have you scanned in");
+    if(response==true){
+        vals = {}
+        pushString = ""
+        document.cookie = "pushString="+pushString
+    }
 }
 function mf() {
     mfv = 1
